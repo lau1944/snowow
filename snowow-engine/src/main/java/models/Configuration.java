@@ -1,8 +1,6 @@
 package models;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Map;
 
@@ -14,27 +12,33 @@ import java.util.Map;
 @Data
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
 public class Configuration {
     /**
      * Application mode
      */
-    private Boolean debug;
+    @Builder.Default
+    private Boolean debug = true;
     /**
      * Application name
      */
-    private String appName;
+    @Builder.Default
+    private String appName = "snow_app";
     /**
      * Server name
      */
-    private String port;
+    @Builder.Default
+    private String port = "80";
     /**
      * Server profiles
      * ex: dev
      * Will generate application-dev.properties file
      */
-    private String profiles;
+    @Builder.Default
+    private String profiles = "dev";
     /**
-     *
+     * Addition environment variables
      */
     private Map<String, Object> env;
 }

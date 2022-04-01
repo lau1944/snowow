@@ -28,6 +28,8 @@ public class SnowManager implements SnowEngine {
         // Load the configuration file
         ConfigurationParser configurationParser = new ConfigurationParser();
         Configuration configuration = configurationParser.parse(path + "configuration.json");
+
+        return output;
     }
 
     static SnowEngine getInstance() {

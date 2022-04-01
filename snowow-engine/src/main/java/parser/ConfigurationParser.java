@@ -12,14 +12,16 @@ import java.io.FileReader;
 
 /**
  * Parsing configuration JSON file into #Configuration object
+ *
+ * @author liuquan
  */
 @Slf4j
-public class ConfigurationParser extends BaseParser {
+public class ConfigurationParser extends BaseParser<Configuration> {
 
     private static final String ERROR_PATH = "ConfigurationParser";
 
     @Override
-    public Configuration parse(String path) {
+    public synchronized Configuration parse(String path) {
         if (path == null) {
             throw new IllegalArgumentException("Configuration file path should not be empty");
         }
