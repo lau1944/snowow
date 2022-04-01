@@ -1,7 +1,10 @@
 package core;
 
 import lombok.extern.log4j.Log4j;
+import models.Configuration;
 import org.apache.logging.log4j.util.Strings;
+import parser.ConfigurationParser;
+
 import java.util.Objects;
 
 @Log4j
@@ -22,6 +25,9 @@ public class SnowManager implements SnowEngine {
             output = "outputs";
         }
 
+        // Load the configuration file
+        ConfigurationParser configurationParser = new ConfigurationParser();
+        Configuration configuration = configurationParser.parse(path + "configuration.json");
     }
 
     static SnowEngine getInstance() {

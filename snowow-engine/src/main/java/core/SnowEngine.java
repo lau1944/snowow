@@ -1,5 +1,7 @@
 package core;
 
+import java.io.FileNotFoundException;
+
 /**
  * Engine to start service load
  *
@@ -12,5 +14,5 @@ public interface SnowEngine {
      * @param output output directory name, default is 'outputs'
      * @return
      */
-    String parse(String path, String output);
+    String parse(String path, String output) throws FileNotFoundException;
 }
