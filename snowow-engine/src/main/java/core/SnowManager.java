@@ -1,13 +1,13 @@
 package core;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import models.Configuration;
 import org.apache.logging.log4j.util.Strings;
 import parser.ConfigurationParser;
 
 import java.util.Objects;
 
-@Log4j
+@Slf4j
 public class SnowManager implements SnowEngine {
 
     static volatile SnowEngine engine;
