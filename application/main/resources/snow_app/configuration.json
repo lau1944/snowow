@@ -1,0 +1,8 @@
+{
+  "debug": true,
+  "appName": "SnowApp",
+  "profiles": "dev",
+  "env": {
+    "api_key": "123456"
+  }
+}
