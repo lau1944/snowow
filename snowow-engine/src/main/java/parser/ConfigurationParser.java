@@ -1,14 +1,12 @@
 package parser;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import exceptions.ParserException;
 import lombok.extern.slf4j.Slf4j;
 import models.Configuration;
+import utils.Deserializer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 
 /**
  * Parsing configuration JSON file into #Configuration object
@@ -28,8 +26,7 @@ public class ConfigurationParser extends BaseParser<Configuration> {
 
         File jsonFile = new File(path);
         try {
-            JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(jsonFile));
-            Configuration configuration = this.gson.fromJson(jsonObject, Configuration.class);
+            Configuration configuration = Deserializer.deserialize(jsonFile, Configuration.class);
             return configuration;
         } catch (FileNotFoundException e) {
             log.error("Server exception happens in {}, please make sure your configuration.json is present in your path", ERROR_PATH);

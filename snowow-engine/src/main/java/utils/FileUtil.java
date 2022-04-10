@@ -35,4 +35,11 @@ public class FileUtil {
         String lastElement = Paths.get(enginePath).getFileName().toString();
         return enginePath.replace(lastElement, "application/main");
     }
+
+    /**
+     * Java code path
+     */
+    public static final String getRepoPath() {
+        return getApplicationPath() + "/java/com/vau/snowow/snowow/platform";
+    }
 }

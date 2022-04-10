@@ -7,8 +7,6 @@ import org.springframework.util.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Writer class for writing configuration into application.properties
@@ -16,12 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author liuquan
  */
 @Slf4j
-public class ConfigurationWriter implements Writer<Configuration> {
-
-    private Lock lock;
-    public ConfigurationWriter() {
-        this.lock = new ReentrantLock(true);
-    }
+public class ConfigurationWriter extends BaseWriter<Configuration> {
 
     /**
      * Write configuration into application property files
