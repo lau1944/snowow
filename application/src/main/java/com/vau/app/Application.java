@@ -3,15 +3,19 @@ package com.vau.app;
 import com.vau.snowow.engine.core.SnowManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import java.io.IOException;
 
-@SpringBootApplication
+/**
+ * Run with ./mvnw install && ./mvnw spring-boot:run -pl application
+ */
+@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class Application {
 
     public static void main(String[] args) throws IOException {
         // Parse JSON files into java file
-        SnowManager.getInstance().parse("json_path", "com.vau.app");
+        SnowManager.getInstance().parse("snow_app", "com.vau.app");
         SpringApplication.run(Application.class, args);
     }
 

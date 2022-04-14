@@ -2,6 +2,7 @@
   "debug": true,
   "appName": "SnowApp",
   "profiles": "dev",
+  "port": 8080,
   "env": {
     "api_key": "123456"
   }

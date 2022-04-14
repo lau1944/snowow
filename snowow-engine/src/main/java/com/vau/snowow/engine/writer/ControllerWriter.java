@@ -63,8 +63,7 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                             methodMap.put("produces", "MediaType.APPLICATION_JSON_VALUE");
                         }
                         ClassWriter.Annotation[] methodAnnotation = new ClassWriter.Annotation[]{
-                                new ClassWriter.Annotation(mapMethodIntoAnnotation(path.getMethod()), methodMap),
-                                new ClassWriter.Annotation("ResponseBody")
+                                new ClassWriter.Annotation(mapMethodIntoAnnotation(path.getMethod()), methodMap)
                         };
                         ClassWriter.ClassComponents components = new ClassWriter.Method(
                                 path.getName(),

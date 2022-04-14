@@ -81,7 +81,7 @@ public class ClassWriter {
         fileWriter.write("package " + packageName + ".controllers;\n");
         // write import dependencies
         fileWriter.write("import " + "org.springframework.beans.factory.annotation.Autowired;\n" +
-                "import org.springframework.web.bind.annotation.*;\n\n");
+                "import org.springframework.web.bind.annotation.*; \n import org.springframework.http.MediaType; \n\n");
     }
 
     private void writeMethod(Method method) throws IOException {
@@ -137,16 +137,16 @@ public class ClassWriter {
                     builder.append(entry.getKey());
                     builder.append("=");
                     Object value = entry.getValue();
-                    if (value instanceof String) {
+                    if ("value".equals(entry.getKey()) && value instanceof String) {
                         builder.append("\"");
                         builder.append(value);
                         builder.append("\"");
-                        if (entries.hasNext()) {
-                            builder.append(", ");
-                        }
-                        continue;
+                    } else {
+                        builder.append(entry.getValue());
                     }
-                    builder.append(entry.getValue());
+                    if (entries.hasNext()) {
+                        builder.append(", ");
+                    }
                 }
             }
             builder.append(")");
