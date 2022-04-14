@@ -1,0 +1,21 @@
+{
+  "name": "User",
+  "version": "1.0",
+  "path": "/user",
+  "paths": [
+    {
+      "name": "getUserInfo",
+      "path": "/info",
+      "method": "GET",
+      "header": "",
+      "params": "",
+      "action": "",
+      "response": {
+        "status": 200,
+        "type": "application/json",
+        "data_type": "String",
+        "data": "jimmy"
+      }
+    }
+  ]
+}

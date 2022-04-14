@@ -1,15 +1,15 @@
-import core.SnowEngine;
-import core.SnowManager;
-import org.junit.jupiter.api.Test;
+import com.vau.snowow.engine.core.SnowEngine;
+import com.vau.snowow.engine.core.SnowManager;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 
 public class EngineTest {
 
-    SnowEngine snowEngine = SnowManager.getInstance();
+    SnowEngine engine = SnowManager.getInstance();
 
     @Test
     public void parseTest() throws IOException {
-        snowEngine.parse("snow_app", "com.vau.snowow.snowow.platform");
+        engine.parse("snow_app", "com.vau.app");
     }
 }

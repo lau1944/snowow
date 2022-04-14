@@ -1,7 +1,9 @@
-import models.Configuration;
-import org.junit.jupiter.api.Test;
-import utils.FileUtil;
-import writer.ConfigurationWriter;
+
+
+import com.vau.snowow.engine.models.Configuration;
+import com.vau.snowow.engine.utils.FileUtil;
+import com.vau.snowow.engine.writer.ConfigurationWriter;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 
