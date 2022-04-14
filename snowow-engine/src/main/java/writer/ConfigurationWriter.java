@@ -5,7 +5,6 @@ import models.Configuration;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -51,12 +50,6 @@ public class ConfigurationWriter extends BaseWriter<Configuration> {
         }
 
         return 1;
-    }
-
-    private void writeToFile(String content, File targetFile) throws IOException {
-        FileWriter writer = new FileWriter(targetFile, false);
-        writer.write(content);
-        writer.close();
     }
 
     /**

@@ -10,6 +10,6 @@ public class EngineTest {
 
     @Test
     public void parseTest() throws IOException {
-        snowEngine.parse("snow_app", "outputs");
+        snowEngine.parse("snow_app", "com.vau.snowow.snowow.platform");
     }
 }

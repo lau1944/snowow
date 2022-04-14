@@ -24,7 +24,7 @@ public class HttpParser extends BaseParser<List<Controller>> {
     /**
      * @param path Directory contains API
      * @return
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException,FileNotFoundException
      */
     @Override
     public List<Controller> parse(String path) throws IllegalArgumentException, FileNotFoundException {

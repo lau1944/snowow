@@ -22,6 +22,10 @@ public class Controller {
      */
     private String version;
     /**
+     * Request path, global mapping
+     */
+    private String path;
+    /**
      * API paths
      */
     private List<Path> paths;

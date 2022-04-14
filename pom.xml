@@ -2,21 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-	<modules>
-		<module>snowow-engine</module>
-	</modules>
+
+	<packaging>pom</packaging>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.6.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.vau.snowow</groupId>
 	<artifactId>snowow.platform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>snowow.platform</name>
 	<description>snowow - a low code web service</description>
+
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -62,12 +63,6 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<!--core engine dependency-->
-		<dependency>
-			<groupId>com.vau.snowow</groupId>
-			<artifactId>snowow-engine</artifactId>
-			<version>0.0.1</version>
 		</dependency>
 	</dependencies>
 

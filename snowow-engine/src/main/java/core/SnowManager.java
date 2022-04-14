@@ -10,6 +10,7 @@ import utils.FileUtil;
 import writer.ConfigurationWriter;
 import writer.ControllerWriter;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +24,7 @@ public class SnowManager implements SnowEngine {
     }
 
     @Override
-    public String parse(String jsonPath, String output) throws IOException {
+    public String parse(String jsonPath, String packageName) throws IOException {
         if (Objects.isNull(jsonPath) || Strings.isEmpty(jsonPath)) {
             jsonPath = "snow_app";
         }
@@ -51,14 +52,14 @@ public class SnowManager implements SnowEngine {
 
         log.info("Controller files is successfully parsed, jsonPath is on {}, total {} http files is found", apiDir, controllers.size());
 
-        // Write controller classes into output directory
-        if (Objects.isNull(output) || output.isEmpty()) {
-            output = FileUtil.getRepoPath();
+        // Write controller classes into packageName directory
+        if (Objects.isNull(packageName) || packageName.isEmpty()) {
+            throw new NullPointerException();
         }
         ControllerWriter controllerWriter = new ControllerWriter();
-        int pathResult = controllerWriter.write(controllers, output);
+        int pathResult = controllerWriter.write(controllers, packageName);
 
-        return output;
+        return packageName;
     }
 
     public static SnowEngine getInstance() {

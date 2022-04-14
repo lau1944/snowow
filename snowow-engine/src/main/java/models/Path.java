@@ -12,6 +12,10 @@ import lombok.*;
 @NoArgsConstructor
 public class Path {
     /**
+     * Path name
+     */
+    private String name;
+    /**
      * API path
      */
     private String path;

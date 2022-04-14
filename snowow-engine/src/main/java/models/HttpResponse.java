@@ -1,5 +1,6 @@
 package models;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.*;
 
 /**
@@ -19,6 +20,11 @@ public class HttpResponse {
      * Response type ex: application/json
      */
     private String type;
+    /**
+     * Response data type name
+     */
+    @SerializedName("data_type")
+    private String dataType;
     /**
      * Optional, response data
      */
