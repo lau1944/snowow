@@ -62,4 +62,8 @@ public class ConfigurationWriter extends BaseWriter<Configuration> {
     private String decompose(Configuration configuration) {
         return configuration.toString();
     }
+
+    public static BaseWriter newWriter() {
+        return new ConfigurationWriter();
+    }
 }

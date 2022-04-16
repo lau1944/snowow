@@ -224,5 +224,4 @@ public class ClassWriter {
             this.content = content;
         }
     }
-
 }

@@ -39,7 +39,7 @@ public class SnowManager implements SnowEngine {
         log.info("Configuration file is successfully parsed, jsonPath is on {}", resPath);
 
         // Write configuration into application.properties
-        ConfigurationWriter configurationWriter = new ConfigurationWriter();
+        ConfigurationWriter configurationWriter = (ConfigurationWriter) ConfigurationWriter.newWriter();
         int configResult = configurationWriter.write(configuration, FileUtil.getApplicationPath() + "/resources");
         if (configResult == -1) {
             throw new IllegalStateException("An error occurs when writing configuration file");
@@ -58,8 +58,11 @@ public class SnowManager implements SnowEngine {
         if (Objects.isNull(packageName) || packageName.isEmpty()) {
             throw new NullPointerException();
         }
-        ControllerWriter controllerWriter = new ControllerWriter();
+        ControllerWriter controllerWriter = (ControllerWriter) ControllerWriter.newWriter();
         int pathResult = controllerWriter.write(controllers, packageName);
+        if (pathResult == -1) {
+            throw new IllegalStateException("An error occurs when writing Controller files");
+        }
 
         return packageName;
     }

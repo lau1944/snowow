@@ -24,9 +24,10 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
     @Override
     public int write(List<Controller> controllers, String packageName) throws IOException {
         if (controllers.isEmpty() || !StringUtils.hasLength(packageName)) {
-            return 0;
+            return -1;
         }
 
+        int writeResult = 1;
         lock.lock();
         // Format package path into file path
         String targetPath = packageName.replace(".", "/");
@@ -76,13 +77,16 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                     }
                 });
             }
+        } catch (Exception e) {
+            log.error(e.toString());
+            writeResult = -1;
         } finally {
             // close writer
             close();
             lock.unlock();
         }
 
-        return 0;
+        return writeResult;
     }
 
     /**
@@ -103,5 +107,9 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
             default:
                 throw new IllegalArgumentException("Please pass a valid API method (ex. GET, POST");
         }
+    }
+
+    public static BaseWriter newWriter() {
+        return new ControllerWriter();
     }
 }
