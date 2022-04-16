@@ -1,0 +1,11 @@
+[
+  {
+    "name": "name",
+    "type": "String"
+  },
+  {
+    "name": "location",
+    "type": "String",
+    "nullable": "true"
+  }
+]

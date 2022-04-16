@@ -153,6 +153,18 @@ public class ClassWriter {
             builder.append(" ");
             return builder.toString();
         }
+
+        public static Annotation[] dataModelCollections() {
+            Annotation[] annotations = new Annotation[]{
+                    new ClassWriter.Annotation("Data"),
+                    new ClassWriter.Annotation("Setter"),
+                    new ClassWriter.Annotation("Getter"),
+                    new ClassWriter.Annotation("Builder"),
+                    new ClassWriter.Annotation("AllArgsConstructor"),
+                    new ClassWriter.Annotation("AllArgsConstructor")
+            };
+            return annotations;
+        }
     }
 
     @Getter

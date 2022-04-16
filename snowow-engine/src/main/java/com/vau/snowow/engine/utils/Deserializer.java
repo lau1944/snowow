@@ -17,9 +17,13 @@ public class Deserializer {
 
     static final Gson gson = new Gson();
 
-    public static final <T> T deserialize(File targetFile, Class<T> tClass) throws FileNotFoundException {
+    public static final <T> T deserializeTo(File targetFile, Class<T> tClass) throws FileNotFoundException {
         JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(targetFile));
         T obj = gson.fromJson(jsonObject, tClass);
         return obj;
+    }
+
+    public static final JsonObject deserialize(File targetFile) throws FileNotFoundException {
+        return (JsonObject) JsonParser.parseReader(new FileReader(targetFile));
     }
 }

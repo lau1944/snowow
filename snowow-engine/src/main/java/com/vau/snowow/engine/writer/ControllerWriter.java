@@ -28,17 +28,14 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
         }
 
         int writeResult = 1;
-        lock.lock();
         // Format package path into file path
         String targetPath = packageName.replace(".", "/");
 
         File controllersDir = new File(FileUtil.getApplicationPath() + "/java/" + targetPath + "/controllers");
-        log.info(controllersDir.getPath());
-
         if (controllersDir.mkdirs()) {
             log.info("Controller directory was not found, controller directory is created, the path is {}", controllersDir.getPath());
         }
-
+        lock.lock();
         try {
             for (final Controller controller : controllers) {
                 String className = controller.getName() + "Controller";
@@ -47,7 +44,7 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                     log.info("{} is created", controllerFile.getAbsolutePath());
                 }
 
-                Map<String, Object> requestMap = new HashMap(1);
+                Map<String, Object> requestMap = new HashMap(5);
                 requestMap.put("value", controller.getPath());
                 ClassWriter.Annotation[] classAnnotation = new ClassWriter.Annotation[]{
                         new ClassWriter.Annotation("RestController"),

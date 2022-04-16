@@ -26,10 +26,10 @@ public class ConfigurationParser extends BaseParser<Configuration> {
 
         File jsonFile = new File(path);
         try {
-            Configuration configuration = Deserializer.deserialize(jsonFile, Configuration.class);
+            Configuration configuration = Deserializer.deserializeTo(jsonFile, Configuration.class);
             return configuration;
         } catch (FileNotFoundException e) {
-            log.error("Server exception happens in {}, please make sure your configuration.json is present in your path", ERROR_PATH);
+            log.error("Server exception happens in {}, please make sure your configuration.json is present in your path: {}", ERROR_PATH, path);
             throw new ParserException("configuration.json is not found in your path");
         }
     }

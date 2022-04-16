@@ -47,7 +47,7 @@ public class HttpParser extends BaseParser<List<Controller>> {
                 continue;
             }
 
-            Controller controller = Deserializer.deserialize(file, Controller.class);
+            Controller controller = Deserializer.deserializeTo(file, Controller.class);
             controllers.add(controller);
         }
 

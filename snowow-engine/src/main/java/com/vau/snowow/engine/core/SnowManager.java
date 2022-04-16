@@ -1,15 +1,20 @@
 package com.vau.snowow.engine.core;
 
+import com.google.gson.JsonObject;
 import com.vau.snowow.engine.models.Configuration;
 import com.vau.snowow.engine.models.Controller;
 import com.vau.snowow.engine.parser.ConfigurationParser;
 import com.vau.snowow.engine.parser.HttpParser;
+import com.vau.snowow.engine.parser.ModelParser;
 import com.vau.snowow.engine.utils.FileUtil;
 import com.vau.snowow.engine.writer.ConfigurationWriter;
 import com.vau.snowow.engine.writer.ControllerWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.ui.Model;
 
+import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -31,22 +36,25 @@ public class SnowManager implements SnowEngine {
             jsonPath = "snow_app";
         }
 
-        String resPath = FileUtil.getApplicationPath() + "/resources/" + jsonPath;
-        // Load the configuration file
-        ConfigurationParser configurationParser = new ConfigurationParser();
-        Configuration configuration = configurationParser.parse(resPath + "/configuration.json");
+        String resPath = getResourcePath(jsonPath);
 
-        log.info("Configuration file is successfully parsed, jsonPath is on {}", resPath);
+        // Parse configuration file
+        configParse(resPath);
 
-        // Write configuration into application.properties
-        ConfigurationWriter configurationWriter = (ConfigurationWriter) ConfigurationWriter.newWriter();
-        int configResult = configurationWriter.write(configuration, FileUtil.getApplicationPath() + "/resources");
-        if (configResult == -1) {
-            throw new IllegalStateException("An error occurs when writing configuration file");
-        }
+        // Parse HTTP files
+        List<Controller> controllers = httpParse(resPath, packageName);
 
-        log.info("Configuration file is successfully written to application.properties file, jsonPath is on {}", resPath);
+        return packageName;
+    }
 
+    private void modelParse(String resPath) throws FileNotFoundException {
+        // Load model file
+        ModelParser modelParser = new ModelParser();
+        List<JsonObject> jsonList = modelParser.parse(resPath);
+
+    }
+
+    private List<Controller> httpParse(String resPath, String packageName) throws IOException {
         String apiDir = resPath + "/api";
         // Load API file
         HttpParser httpParser = new HttpParser();
@@ -63,8 +71,27 @@ public class SnowManager implements SnowEngine {
         if (pathResult == -1) {
             throw new IllegalStateException("An error occurs when writing Controller files");
         }
+        return controllers;
+    }
 
-        return packageName;
+    private void configParse(String resPath) throws IOException {
+        // Load the configuration file
+        ConfigurationParser configurationParser = new ConfigurationParser();
+        Configuration configuration = configurationParser.parse(resPath + "/configuration.json");
+
+        log.info("Configuration file is successfully parsed, jsonPath is on {}", resPath);
+
+        // Write configuration into application.properties
+        ConfigurationWriter configurationWriter = (ConfigurationWriter) ConfigurationWriter.newWriter();
+        int configResult = configurationWriter.write(configuration, FileUtil.getApplicationPath() + "/resources");
+        if (configResult == -1) {
+            throw new IllegalStateException("An error occurs when writing configuration file");
+        }
+        log.info("Configuration file is successfully written to application.properties file, jsonPath is on {}", resPath);
+    }
+
+    private String getResourcePath(String jsonPath) {
+        return FileUtil.getApplicationPath() + "/resources/" + jsonPath;
     }
 
     public static SnowEngine getInstance() {
