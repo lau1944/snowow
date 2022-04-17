@@ -1,8 +1,6 @@
 package com.vau.snowow.engine.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,12 +16,12 @@ public class Deserializer {
     static final Gson gson = new Gson();
 
     public static final <T> T deserializeTo(File targetFile, Class<T> tClass) throws FileNotFoundException {
-        JsonObject jsonObject = (JsonObject) JsonParser.parseReader(new FileReader(targetFile));
-        T obj = gson.fromJson(jsonObject, tClass);
+        JsonElement jsonElement = JsonParser.parseReader(new FileReader(targetFile));
+        T obj = gson.fromJson(jsonElement, tClass);
         return obj;
     }
 
-    public static final JsonObject deserialize(File targetFile) throws FileNotFoundException {
-        return (JsonObject) JsonParser.parseReader(new FileReader(targetFile));
+    public static final <T> T deserialize(File targetFile) throws FileNotFoundException {
+        return (T) JsonParser.parseReader(new FileReader(targetFile));
     }
 }

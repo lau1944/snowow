@@ -3,6 +3,7 @@
 import com.vau.snowow.engine.models.Configuration;
 import com.vau.snowow.engine.utils.FileUtil;
 import com.vau.snowow.engine.writer.ConfigurationWriter;
+import com.vau.snowow.engine.writer.ModelWriter;
 import org.testng.annotations.Test;
 
 import java.io.IOException;

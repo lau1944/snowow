@@ -1,11 +1,14 @@
-[
-  {
-    "name": "name",
-    "type": "String"
-  },
-  {
-    "name": "location",
-    "type": "String",
-    "nullable": "true"
-  }
-]
+{
+  "name": "School",
+  "fields": [
+    {
+      "name": "name",
+      "type": "String"
+    },
+    {
+      "name": "location",
+      "type": "String",
+      "nullable": 1
+    }
+  ]
+}

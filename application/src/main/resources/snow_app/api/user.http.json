@@ -13,7 +13,7 @@
       "response": {
         "status": 200,
         "type": "application/json",
-        "data_type": "String",
+        "data_type": "User",
         "data": "jimmy"
       }
     }

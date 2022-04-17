@@ -18,12 +18,12 @@ import java.util.function.Consumer;
 public class ClassWriter {
     private File file;
     private String className;
-    private Annotation[] annotations;
+    private List<Annotation> annotations;
     private Boolean isPublic;
     private FileWriter fileWriter;
     private List<ClassComponents> components = new ArrayList<>();
 
-    public ClassWriter(File file, String className, Annotation[] annotations, Boolean isPublic) {
+    public ClassWriter(File file, String className, List<Annotation> annotations, Boolean isPublic) {
         this.file = file;
         this.annotations = annotations;
         this.className = className;
@@ -32,12 +32,12 @@ public class ClassWriter {
 
     public ClassWriter(File file, String className, Boolean isPublic) {
         this.file = file;
-        this.annotations = new Annotation[]{};
+        this.annotations = new ArrayList<>();
         this.className = className;
         this.isPublic = isPublic;
     }
 
-    public ClassWriter(String className, Boolean isPublic, Annotation[] annotations, FileWriter fileWriter) {
+    public ClassWriter(String className, Boolean isPublic, List<Annotation> annotations, FileWriter fileWriter) {
         this.className = className;
         this.annotations = annotations;
         this.isPublic = isPublic;
@@ -47,15 +47,17 @@ public class ClassWriter {
     /**
      * This method is used to write the class files
      */
-    public void wrap(String packageName, Consumer<List<ClassComponents>> componentsAdd) throws IOException {
+    public void wrap(String packageName, Consumer<List<ClassComponents>> componentsAdd, List<String> dependencies) throws IOException {
         if (Objects.isNull(fileWriter)) {
             fileWriter = new FileWriter(file, false);
         }
 
-        writeDependency(packageName);
+        writeDependency(packageName, dependencies);
 
-        for (Annotation annotation : annotations) {
-            fileWriter.write(annotation.toString());
+        if (Objects.nonNull(annotations)) {
+            for (Annotation annotation : annotations) {
+                fileWriter.write(annotation.toString());
+            }
         }
         fileWriter.write(isPublic ? "public " : "");
         fileWriter.write("class " + className + " {");
@@ -76,36 +78,46 @@ public class ClassWriter {
         fileWriter.close();
     }
 
-    private void writeDependency(String packageName) throws IOException {
+    private void writeDependency(String packageName, List<String> dependencies) throws IOException {
         // Write package file
-        fileWriter.write("package " + packageName + ".controllers;\n");
+        fileWriter.write("package " + packageName + ";\n");
         // write import dependencies
-        fileWriter.write("import " + "org.springframework.beans.factory.annotation.Autowired;\n" +
-                "import org.springframework.web.bind.annotation.*; \n import org.springframework.http.MediaType; \n\n");
+        for (String dependency : dependencies) {
+            fileWriter.write("import " + dependency + ";\n");
+        }
     }
 
     private void writeMethod(Method method) throws IOException {
         fileWriter.write("\t");
-        for (Annotation annotation : method.getAnnotations()) {
-            fileWriter.write(annotation.toString());
+        List<Annotation> annotations = method.getAnnotations();
+        if (Objects.nonNull(annotations)) {
+            for (Annotation annotation : annotations) {
+                fileWriter.write(annotation.toString());
+            }
         }
         fileWriter.write(method.getIsPublic() ? "public " : "private ");
         fileWriter.write(method.getReturnType() + " ");
         fileWriter.write(method.getMethodName());
         fileWriter.write("() ");
         fileWriter.write("{ \n");
-        fileWriter.write("return \"hello world\";");
+        //fileWriter.write("return \"hello world\";");
         fileWriter.write(method.getContent());
         fileWriter.write("\n" + "}");
     }
 
     private void writeField(Field field) throws IOException {
         fileWriter.write("\t");
-        for (Annotation annotation : field.getAnnotations()) {
+        List<Annotation> annotations = field.getAnnotations();
+        for (Annotation annotation : annotations) {
             fileWriter.write(annotation.toString());
         }
         fileWriter.write(field.getIsPublic() ? "public " : "private ");
-        fileWriter.write(field.getFieldType() + " " + field.getFieldName() + ";");
+        fileWriter.write(field.getFieldType() + " " + field.getFieldName());
+        // Check if default value exists, if exists, add to string (Default value should is bound with annotation @Builder.Default
+        if (Objects.nonNull(field.getDefaultValue())) {
+            fileWriter.write(" = " + field.getDefaultValue());
+        }
+        fileWriter.write(";");
     }
 
     abstract static class ClassComponents {
@@ -161,7 +173,7 @@ public class ClassWriter {
                     new ClassWriter.Annotation("Getter"),
                     new ClassWriter.Annotation("Builder"),
                     new ClassWriter.Annotation("AllArgsConstructor"),
-                    new ClassWriter.Annotation("AllArgsConstructor")
+                    new ClassWriter.Annotation("NoArgsConstructor")
             };
             return annotations;
         }
@@ -171,14 +183,16 @@ public class ClassWriter {
     public static class Field extends ClassComponents {
         private String fieldType;
         private String fieldName;
+        private Object defaultValue;
         private Boolean isPublic;
-        private Annotation[] annotations;
+        private List<Annotation> annotations;
 
-        public Field(String fieldType, String fieldName, Boolean isPublic, Annotation[] annotations) {
+        public Field(String fieldType, String fieldName, Boolean isPublic, List<Annotation> annotations, Object defaultValue) {
             this.fieldType = fieldType;
             this.fieldName = fieldName;
             this.isPublic = isPublic;
             this.annotations = annotations;
+            this.defaultValue = defaultValue;
         }
     }
 
@@ -187,7 +201,7 @@ public class ClassWriter {
         private String methodName;
         private Boolean isPublic;
         private Field[] params;
-        private Annotation[] annotations;
+        private List<Annotation> annotations;
         private String returnType;
         private String content;
 
@@ -196,7 +210,7 @@ public class ClassWriter {
             this.returnType = "void";
             this.isPublic = isPublic;
             this.params = new Field[]{};
-            this.annotations = new Annotation[]{};
+            this.annotations = new ArrayList<>();
             this.content = content;
         }
 
@@ -205,11 +219,11 @@ public class ClassWriter {
             this.returnType = "void";
             this.isPublic = isPublic;
             this.params = params;
-            this.annotations = new Annotation[]{};
+            this.annotations = new ArrayList<>();
             this.content = content;
         }
 
-        public Method(String methodName, Boolean isPublic, Field[] params, Annotation[] annotations, String content) {
+        public Method(String methodName, Boolean isPublic, Field[] params, List<Annotation> annotations, String content) {
             this.methodName = methodName;
             this.returnType = "void";
             this.isPublic = isPublic;
@@ -218,7 +232,7 @@ public class ClassWriter {
             this.content = content;
         }
 
-        public Method(String methodName, Boolean isPublic, String returnType, Annotation[] annotations, String content) {
+        public Method(String methodName, Boolean isPublic, String returnType, List<Annotation> annotations, String content) {
             this.methodName = methodName;
             this.returnType = returnType;
             this.isPublic = isPublic;
@@ -227,7 +241,7 @@ public class ClassWriter {
             this.content = content;
         }
 
-        public Method(String methodName, Boolean isPublic, String returnType, Field[] params, Annotation[] annotations, String content) {
+        public Method(String methodName, Boolean isPublic, String returnType, Field[] params, List<Annotation> annotations, String content) {
             this.methodName = methodName;
             this.returnType = returnType;
             this.isPublic = isPublic;

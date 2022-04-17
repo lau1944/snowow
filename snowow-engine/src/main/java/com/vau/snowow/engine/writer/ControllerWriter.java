@@ -9,9 +9,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Writer class for writing controller classes
@@ -50,8 +48,13 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         new ClassWriter.Annotation("RestController"),
                         new ClassWriter.Annotation("RequestMapping", requestMap)
                 };
-                ClassWriter classWriter = new ClassWriter(controllerFile, className, classAnnotation, true);
-                classWriter.wrap(packageName, classComponents -> {
+                ClassWriter classWriter = new ClassWriter(controllerFile, className, Arrays.asList(classAnnotation), true);
+                List<String> dependencies = Arrays.asList(
+                        "org.springframework.beans.factory.annotation.Autowired",
+                        "org.springframework.web.bind.annotation.",
+                        "org.springframework.http.MediaType"
+                );
+                classWriter.wrap(packageName + ".controllers", classComponents -> {
                     for (final Path path : controller.getPaths()) {
                         Map<String, Object> methodMap = new HashMap(8);
                         // push request path
@@ -67,12 +70,12 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                                 path.getName(),
                                 true,
                                 path.getResponse().getDataType(),
-                                methodAnnotation,
+                                Arrays.asList(methodAnnotation),
                                 ""
                         );
                         classComponents.add(components);
                     }
-                });
+                }, dependencies);
             }
         } catch (Exception e) {
             log.error(e.toString());

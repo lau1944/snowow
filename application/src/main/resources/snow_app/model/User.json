@@ -1,18 +1,21 @@
-[
-  {
-    "name": "name",
-    "type": "String",
-    "nullable": "false"
-  },
-  {
-    "name": "age",
-    "type": "int",
-    "nullable": "true",
-    "default": 0
-  },
-  {
-    "name": "school",
-    "type": "School",
-    "nullable": "false"
-  }
-]
+{
+  "name": "User",
+  "fields": [
+    {
+      "name": "name",
+      "type": "String",
+      "nullable": 0
+    },
+    {
+      "name": "age",
+      "type": "int",
+      "nullable": 1,
+      "default": 0
+    },
+    {
+      "name": "school",
+      "type": "School",
+      "nullable": 1
+    }
+  ]
+}

@@ -1,20 +1,18 @@
 package com.vau.snowow.engine.core;
 
-import com.google.gson.JsonObject;
 import com.vau.snowow.engine.models.Configuration;
 import com.vau.snowow.engine.models.Controller;
+import com.vau.snowow.engine.models.Model;
 import com.vau.snowow.engine.parser.ConfigurationParser;
 import com.vau.snowow.engine.parser.HttpParser;
 import com.vau.snowow.engine.parser.ModelParser;
 import com.vau.snowow.engine.utils.FileUtil;
 import com.vau.snowow.engine.writer.ConfigurationWriter;
 import com.vau.snowow.engine.writer.ControllerWriter;
+import com.vau.snowow.engine.writer.ModelWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.ui.Model;
 
-import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -36,10 +34,18 @@ public class SnowManager implements SnowEngine {
             jsonPath = "snow_app";
         }
 
+        // Write controller classes into packageName directory
+        if (Objects.isNull(packageName) || packageName.isEmpty()) {
+            throw new NullPointerException();
+        }
+
         String resPath = getResourcePath(jsonPath);
 
         // Parse configuration file
         configParse(resPath);
+
+        // Parse model files
+        modelParse(resPath, packageName);
 
         // Parse HTTP files
         List<Controller> controllers = httpParse(resPath, packageName);
@@ -47,14 +53,21 @@ public class SnowManager implements SnowEngine {
         return packageName;
     }
 
-    private void modelParse(String resPath) throws FileNotFoundException {
+    private void modelParse(String resPath, String packageName) throws IOException {
+        log.info("Parsing Model files...");
         // Load model file
         ModelParser modelParser = new ModelParser();
-        List<JsonObject> jsonList = modelParser.parse(resPath);
-
+        List<Model> models = modelParser.parse(resPath);
+        log.info("Model files parse successfully, total model count: {}", models.size());
+        ModelWriter writer = (ModelWriter) ModelWriter.newWriter();
+        int result = writer.write(models, packageName);
+        if (result == -1) {
+            throw new IllegalStateException("An error occurs when writing Model files");
+        }
     }
 
     private List<Controller> httpParse(String resPath, String packageName) throws IOException {
+        log.info("Parsing Controller files...");
         String apiDir = resPath + "/api";
         // Load API file
         HttpParser httpParser = new HttpParser();
@@ -62,10 +75,6 @@ public class SnowManager implements SnowEngine {
 
         log.info("Controller files is successfully parsed, jsonPath is on {}, total {} http files is found", apiDir, controllers.size());
 
-        // Write controller classes into packageName directory
-        if (Objects.isNull(packageName) || packageName.isEmpty()) {
-            throw new NullPointerException();
-        }
         ControllerWriter controllerWriter = (ControllerWriter) ControllerWriter.newWriter();
         int pathResult = controllerWriter.write(controllers, packageName);
         if (pathResult == -1) {
@@ -75,6 +84,7 @@ public class SnowManager implements SnowEngine {
     }
 
     private void configParse(String resPath) throws IOException {
+        log.info("Parsing configuration files...");
         // Load the configuration file
         ConfigurationParser configurationParser = new ConfigurationParser();
         Configuration configuration = configurationParser.parse(resPath + "/configuration.json");
