@@ -11,7 +11,7 @@ import java.io.FileReader;
  *
  * @author liuquan
  */
-public class Deserializer {
+public final class Deserializer {
 
     static final Gson gson = new Gson();
 

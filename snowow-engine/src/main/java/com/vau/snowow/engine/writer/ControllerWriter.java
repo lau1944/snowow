@@ -29,7 +29,8 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
         // Format package path into file path
         String targetPath = packageName.replace(".", "/");
 
-        File controllersDir = new File(FileUtil.getApplicationPath() + "/java/" + targetPath + "/controllers");
+        String mainDirPath = FileUtil.getApplicationPath() + "/java/" + targetPath;
+        File controllersDir = new File(mainDirPath + "/controllers");
         if (controllersDir.mkdirs()) {
             log.info("Controller directory was not found, controller directory is created, the path is {}", controllersDir.getPath());
         }
@@ -49,11 +50,17 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         new ClassWriter.Annotation("RequestMapping", requestMap)
                 };
                 ClassWriter classWriter = new ClassWriter(controllerFile, className, Arrays.asList(classAnnotation), true);
-                List<String> dependencies = Arrays.asList(
+                List<String> dependencies = new ArrayList<>(List.of(
                         "org.springframework.beans.factory.annotation.Autowired",
-                        "org.springframework.web.bind.annotation.",
+                        "org.springframework.web.bind.annotation.*",
                         "org.springframework.http.MediaType"
-                );
+                ));
+
+                File modelDir = new File(mainDirPath + "/models");
+                if (modelDir.exists()) {
+                    dependencies.add("com.vau.app.models.*");
+                }
+
                 classWriter.wrap(packageName + ".controllers", classComponents -> {
                     for (final Path path : controller.getPaths()) {
                         Map<String, Object> methodMap = new HashMap(8);
