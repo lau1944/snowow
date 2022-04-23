@@ -1,5 +1,6 @@
 package com.vau.snowow.engine.writer;
 
+import com.vau.snowow.engine.core.SnowContext;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -105,6 +106,14 @@ public class ClassWriter {
         fileWriter.write("\n" + "}");
     }
 
+    private void writeResponse(String type) {
+        if (!SnowContext.containsModel(type)) {
+            throw new IllegalStateException("Specific type " + type + " has not been initialized");
+        }
+
+
+    }
+
     private void writeField(Field field) throws IOException {
         fileWriter.write("\t");
         List<Annotation> annotations = field.getAnnotations();
@@ -200,7 +209,7 @@ public class ClassWriter {
     public static class Method extends ClassComponents {
         private String methodName;
         private Boolean isPublic;
-        private Field[] params;
+        private List<Field> params;
         private List<Annotation> annotations;
         private String returnType;
         private String content;
@@ -209,12 +218,12 @@ public class ClassWriter {
             this.methodName = methodName;
             this.returnType = "void";
             this.isPublic = isPublic;
-            this.params = new Field[]{};
+            this.params = new ArrayList<>();
             this.annotations = new ArrayList<>();
             this.content = content;
         }
 
-        public Method(String methodName, Boolean isPublic, Field[] params, String content) {
+        public Method(String methodName, Boolean isPublic, List<Field> params, String content) {
             this.methodName = methodName;
             this.returnType = "void";
             this.isPublic = isPublic;
@@ -223,7 +232,7 @@ public class ClassWriter {
             this.content = content;
         }
 
-        public Method(String methodName, Boolean isPublic, Field[] params, List<Annotation> annotations, String content) {
+        public Method(String methodName, Boolean isPublic, List<Field> params, List<Annotation> annotations, String content) {
             this.methodName = methodName;
             this.returnType = "void";
             this.isPublic = isPublic;
@@ -236,12 +245,12 @@ public class ClassWriter {
             this.methodName = methodName;
             this.returnType = returnType;
             this.isPublic = isPublic;
-            this.params = new Field[]{};
+            this.params = new ArrayList<>();
             this.annotations = annotations;
             this.content = content;
         }
 
-        public Method(String methodName, Boolean isPublic, String returnType, Field[] params, List<Annotation> annotations, String content) {
+        public Method(String methodName, Boolean isPublic, String returnType, List<Field> params, List<Annotation> annotations, String content) {
             this.methodName = methodName;
             this.returnType = returnType;
             this.isPublic = isPublic;

@@ -13,8 +13,16 @@
       "response": {
         "status": 200,
         "type": "application/json",
-        "data_type": "User",
-        "data": "jimmy"
+        "data": {
+          "type": "User",
+          "value": {
+            "name": "Jimmy",
+            "age": 22,
+            "school": {
+              "name": "NYU"
+            }
+          }
+        }
       }
     }
   ]

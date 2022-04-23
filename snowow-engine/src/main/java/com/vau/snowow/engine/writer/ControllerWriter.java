@@ -3,6 +3,7 @@ package com.vau.snowow.engine.writer;
 import com.vau.snowow.engine.models.Constant;
 import com.vau.snowow.engine.models.Controller;
 import com.vau.snowow.engine.models.Path;
+import com.vau.snowow.engine.utils.Deserializer;
 import com.vau.snowow.engine.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -67,12 +68,13 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         // push request path
                         methodMap.put("value", path.getPath());
                         // push response type
-                        if (path.getResponse().getType().equals(Constant.JSON_FORM)) {
-                            methodMap.put("produces", "MediaType.APPLICATION_JSON_VALUE");
-                        }
+                        methodMap.put("produces", path.getResponse().getType());
                         ClassWriter.Annotation[] methodAnnotation = new ClassWriter.Annotation[]{
                                 new ClassWriter.Annotation(mapMethodIntoAnnotation(path.getMethod()), methodMap)
                         };
+                        List<ClassWriter.Field> params = new ArrayList<>();
+                        // Add header and params
+
                         ClassWriter.ClassComponents components = new ClassWriter.Method(
                                 path.getName(),
                                 true,
