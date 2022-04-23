@@ -158,7 +158,7 @@ public class ClassWriter {
                     builder.append(entry.getKey());
                     builder.append("=");
                     Object value = entry.getValue();
-                    if ("value".equals(entry.getKey()) && value instanceof String) {
+                    if (value instanceof String) {
                         builder.append("\"");
                         builder.append(value);
                         builder.append("\"");

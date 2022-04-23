@@ -21,12 +21,7 @@ public class HttpResponse {
      */
     private String type;
     /**
-     * Response data type name
-     */
-    @SerializedName("data_type")
-    private String dataType;
-    /**
      * Optional, response data
      */
-    private Object data;
+    private DataHolder data;
 }

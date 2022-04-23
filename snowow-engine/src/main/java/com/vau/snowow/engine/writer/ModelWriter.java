@@ -1,5 +1,7 @@
 package com.vau.snowow.engine.writer;
 
+import com.vau.snowow.engine.core.SnowContext;
+import com.vau.snowow.engine.models.Constant;
 import com.vau.snowow.engine.models.Field;
 import com.vau.snowow.engine.models.Model;
 import com.vau.snowow.engine.utils.FileUtil;
@@ -23,17 +25,17 @@ public class ModelWriter extends BaseWriter<List<Model>> {
     private ClassWriter classWriter;
 
     @Override
-    public int write(List<Model> models, String packageName) throws IOException {
+    public int write(List<Model> models, String targetPath) throws IOException {
         if (models.isEmpty()) {
             return 1;
         }
         int result = 1;
         // Format package path into file path
-        String targetPath = Objects.requireNonNull(packageName.replace(".", "/"));
+        String packageName = Constant.ENGINE_PACKAGE_NAME + ".outputs";
 
-        File modelDir = new File(FileUtil.getApplicationPath() + "/java/" + targetPath + "/models");
-        if (modelDir.mkdirs()) {
-            log.info("Model directory was not found, controller directory is created, the path is {}", modelDir.getPath());
+        File modelDir = new File(targetPath + "/models");
+        if (!modelDir.exists()) {
+            modelDir.mkdirs();
         }
 
         lock.lock();
@@ -44,6 +46,9 @@ public class ModelWriter extends BaseWriter<List<Model>> {
                 ClassWriter.Annotation[] annotations = ClassWriter.Annotation.dataModelCollections();
                 classWriter = new ClassWriter(modelFile, className, Arrays.asList(annotations), true);
                 writeClass(classWriter, model.getFields(), packageName);
+
+                //Add to container
+                SnowContext.addModel(packageName + "." + className);
             }
         } catch (Exception e) {
             log.error(e.toString());

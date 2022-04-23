@@ -6,13 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ControllerContainer implements Container<Controller> {
+/**
+ * @author liuquan
+ */
+public class ControllerContainer implements Container {
 
-    private Map<String, Class<Controller>> buffer = new HashMap<>();
+    private Map<String, Class<? extends Objects>> buffer = new HashMap<>();
 
     @Override
-    public void push(String key, Class aClass) {
-            buffer.put(Objects.requireNonNull(key), Objects.requireNonNull(aClass));
+    public <T> void push(String key, Class<T> aClass) {
+            buffer.put(Objects.requireNonNull(key), (Class<? extends Objects>) Objects.requireNonNull(aClass));
     }
 
     @Override
@@ -30,11 +33,11 @@ public class ControllerContainer implements Container<Controller> {
     }
 
     @Override
-    public Class<Controller> get(String name) {
+    public <T> Class<T> get(String name) {
         if (!contains(name)) {
             throw new IllegalStateException("Container does not contain with key " + name);
         }
-        return buffer.get(name);
+        return (Class<T>) buffer.get(name);
     }
 
     @Override

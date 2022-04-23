@@ -1,9 +1,9 @@
 package com.vau.snowow.engine.writer;
 
+import com.vau.snowow.engine.core.SnowContext;
 import com.vau.snowow.engine.models.Constant;
 import com.vau.snowow.engine.models.Controller;
 import com.vau.snowow.engine.models.Path;
-import com.vau.snowow.engine.utils.Deserializer;
 import com.vau.snowow.engine.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -21,20 +21,20 @@ import java.util.*;
 public class ControllerWriter extends BaseWriter<List<Controller>> {
 
     @Override
-    public int write(List<Controller> controllers, String packageName) throws IOException {
-        if (controllers.isEmpty() || !StringUtils.hasLength(packageName)) {
+    public int write(List<Controller> controllers, String targetPath) throws IOException {
+        if (controllers.isEmpty() || !StringUtils.hasLength(targetPath)) {
             return -1;
         }
 
         int writeResult = 1;
         // Format package path into file path
-        String targetPath = packageName.replace(".", "/");
+        String packageName = Constant.ENGINE_PACKAGE_NAME + ".outputs";
 
-        String mainDirPath = FileUtil.getApplicationPath() + "/java/" + targetPath;
-        File controllersDir = new File(mainDirPath + "/controllers");
-        if (controllersDir.mkdirs()) {
-            log.info("Controller directory was not found, controller directory is created, the path is {}", controllersDir.getPath());
+        File controllersDir = new File(targetPath + "/controllers");
+        if (!controllersDir.exists()) {
+            controllersDir.mkdirs();
         }
+
         lock.lock();
         try {
             for (final Controller controller : controllers) {
@@ -57,9 +57,9 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         "org.springframework.http.MediaType"
                 ));
 
-                File modelDir = new File(mainDirPath + "/models");
+                File modelDir = new File(targetPath + "/models");
                 if (modelDir.exists()) {
-                    dependencies.add("com.vau.app.models.*");
+                    dependencies.add(packageName + ".models.*");
                 }
 
                 classWriter.wrap(packageName + ".controllers", classComponents -> {
@@ -78,13 +78,16 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         ClassWriter.ClassComponents components = new ClassWriter.Method(
                                 path.getName(),
                                 true,
-                                path.getResponse().getDataType(),
+                                path.getResponse().getData().getType(),
                                 Arrays.asList(methodAnnotation),
                                 ""
                         );
                         classComponents.add(components);
                     }
                 }, dependencies);
+
+                // Add to container
+                SnowContext.addController(packageName + "." + className);
             }
         } catch (Exception e) {
             log.error(e.toString());

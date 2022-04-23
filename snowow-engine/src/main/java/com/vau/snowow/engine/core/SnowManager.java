@@ -1,6 +1,7 @@
 package com.vau.snowow.engine.core;
 
 import com.vau.snowow.engine.models.Configuration;
+import com.vau.snowow.engine.models.Constant;
 import com.vau.snowow.engine.models.Controller;
 import com.vau.snowow.engine.models.Model;
 import com.vau.snowow.engine.parser.ConfigurationParser;
@@ -45,28 +46,28 @@ public class SnowManager implements SnowEngine {
         configParse(resPath);
 
         // Parse model files
-        modelParse(resPath, packageName);
+        modelParse(resPath);
 
         // Parse HTTP files
-        List<Controller> controllers = httpParse(resPath, packageName);
+        List<Controller> controllers = httpParse(resPath);
 
         return packageName;
     }
 
-    private void modelParse(String resPath, String packageName) throws IOException {
+    private void modelParse(String resPath) throws IOException {
         log.info("Parsing Model files...");
         // Load model file
         ModelParser modelParser = new ModelParser();
         List<Model> models = modelParser.parse(resPath);
         log.info("Model files parse successfully, total model count: {}", models.size());
         ModelWriter writer = (ModelWriter) ModelWriter.newWriter();
-        int result = writer.write(models, packageName);
+        int result = writer.write(models, SnowContext.getOutputPath());
         if (result == -1) {
             throw new IllegalStateException("An error occurs when writing Model files");
         }
     }
 
-    private List<Controller> httpParse(String resPath, String packageName) throws IOException {
+    private List<Controller> httpParse(String resPath) throws IOException {
         log.info("Parsing Controller files...");
         String apiDir = resPath + "/api";
         // Load API file
@@ -76,7 +77,7 @@ public class SnowManager implements SnowEngine {
         log.info("Controller files is successfully parsed, jsonPath is on {}, total {} http files is found", apiDir, controllers.size());
 
         ControllerWriter controllerWriter = (ControllerWriter) ControllerWriter.newWriter();
-        int pathResult = controllerWriter.write(controllers, packageName);
+        int pathResult = controllerWriter.write(controllers, SnowContext.getOutputPath());
         if (pathResult == -1) {
             throw new IllegalStateException("An error occurs when writing Controller files");
         }

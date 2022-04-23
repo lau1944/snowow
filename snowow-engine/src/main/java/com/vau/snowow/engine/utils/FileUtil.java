@@ -4,6 +4,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Paths;
 
 /**
@@ -27,6 +30,10 @@ public class FileUtil {
         return new FileSystemResource("").getFile().getAbsolutePath();
     }
 
+    public static final String getEngineRepo() {
+        return getEnginePath() + "/src/main/java/com/vau/snowow/engine";
+    }
+
     /**
      * Get application path
      */
@@ -41,5 +48,12 @@ public class FileUtil {
      */
     public static final String getRepoPath() {
         return getApplicationPath() + "/java/com/vau/app";
+    }
+
+    public static final Class<?> readClassFromFile(String path, String className) throws MalformedURLException, ClassNotFoundException {
+        URLClassLoader loader = new URLClassLoader(new URL[]{
+                new URL("file://" + path)
+        });
+        return loader.loadClass(className);
     }
 }
