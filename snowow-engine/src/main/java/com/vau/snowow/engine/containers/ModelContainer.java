@@ -1,5 +1,7 @@
 package com.vau.snowow.engine.containers;
 
+import com.vau.snowow.engine.core.SnowManager;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -9,6 +11,7 @@ import java.util.Objects;
  */
 public class ModelContainer implements Container {
 
+    private static volatile Container container;
     private Map<String, Class<? extends Objects>> models = new HashMap<>();
 
     @Override
@@ -46,5 +49,19 @@ public class ModelContainer implements Container {
     @Override
     public void clear() {
         models.clear();
+    }
+
+    public static Container newContainer() {
+        if (Objects.nonNull(container)) {
+            return container;
+        }
+
+        synchronized (ModelContainer.class) {
+            if (Objects.isNull(container)) {
+                container = new ControllerContainer();
+            }
+        }
+
+        return container;
     }
 }

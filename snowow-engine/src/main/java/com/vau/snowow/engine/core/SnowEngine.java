@@ -15,5 +15,5 @@ public interface SnowEngine {
      * default is the same directory path as Application.java
      * @return
      */
-    String parse(String path, String packageName) throws IOException;
+    String parse(String path, String packageName) throws IOException, ClassNotFoundException;
 }

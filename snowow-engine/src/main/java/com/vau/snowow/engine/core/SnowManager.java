@@ -1,7 +1,6 @@
 package com.vau.snowow.engine.core;
 
 import com.vau.snowow.engine.models.Configuration;
-import com.vau.snowow.engine.models.Constant;
 import com.vau.snowow.engine.models.Controller;
 import com.vau.snowow.engine.models.Model;
 import com.vau.snowow.engine.parser.ConfigurationParser;
@@ -30,7 +29,7 @@ public class SnowManager implements SnowEngine {
     }
 
     @Override
-    public String parse(String jsonPath, String packageName) throws IOException {
+    public String parse(String jsonPath, String packageName) throws IOException, ClassNotFoundException {
         if (Objects.isNull(jsonPath) || Strings.isEmpty(jsonPath)) {
             jsonPath = "snow_app";
         }
@@ -54,7 +53,7 @@ public class SnowManager implements SnowEngine {
         return packageName;
     }
 
-    private void modelParse(String resPath) throws IOException {
+    private void modelParse(String resPath) throws IOException, ClassNotFoundException {
         log.info("Parsing Model files...");
         // Load model file
         ModelParser modelParser = new ModelParser();

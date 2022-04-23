@@ -87,7 +87,7 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                 }, dependencies);
 
                 // Add to container
-                SnowContext.addController(packageName + "." + className);
+                //SnowContext.addController(packageName + ".controllers." + className);
             }
         } catch (Exception e) {
             log.error(e.toString());

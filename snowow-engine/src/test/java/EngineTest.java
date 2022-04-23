@@ -9,7 +9,7 @@ public class EngineTest {
     SnowEngine engine = SnowManager.getInstance();
 
     @Test
-    public void parseTest() throws IOException {
+    public void parseTest() throws IOException, ClassNotFoundException {
         engine.parse("snow_app", "com.vau.app");
     }
 }

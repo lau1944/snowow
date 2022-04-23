@@ -7,7 +7,7 @@ public class ContainerTest {
     @Test
     public void modelAddTest() throws ClassNotFoundException {
         SnowContext.onStarted();
-        SnowContext.addController("UserController");
+        SnowContext.addModel("com.vau.snowow.engine.outputs.models.User");
         SnowContext.onFinished();
     }
 }

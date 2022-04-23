@@ -1,17 +1,17 @@
 #! /bin/bash
 
 function snowow() {
-  if [[ $1 == "build" ]]
+  if [[ "$1" == "build" ]]
   then
     # remove output file
-    rm /snowow-engine/src/main/java/com/vau/snowow/engine
+    rm -r snowow-engine/src/main/java/com/vau/snowow/engine/outputs
     # Install dependencies and run server
     ./mvnw install && ./mvnw spring-boot:run -pl application
   elif [[ "$1" == "install" ]]
   then
     ./mvnw install
-  elif [[ "$2" == "clean" ]]
+  elif [[ "$1" == "clean" ]]
   then
-    rm /snowow-engine/src/main/java/com/vau/snowow/engine/outputs
+    rm -r snowow-engine/src/main/java/com/vau/snowow/engine/outputs
   fi
 }

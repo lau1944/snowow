@@ -1,5 +1,6 @@
 package com.vau.snowow.engine.core;
 
+import com.vau.snowow.engine.containers.Container;
 import com.vau.snowow.engine.containers.ControllerContainer;
 import com.vau.snowow.engine.containers.ModelContainer;
 import com.vau.snowow.engine.models.Controller;
@@ -19,8 +20,8 @@ public final class SnowContext {
 
     private static final String OUTPUT_PATH = FileUtil.getEngineRepo() + "/outputs";
     private static volatile SnowContext context;
-    private static ModelContainer modelContainer;
-    private static ControllerContainer controllerContainer;
+    private static Container modelContainer = ModelContainer.newContainer();
+    private static Container controllerContainer = ControllerContainer.newContainer();
 
     public static void onStarted() {
         modelContainer = new ModelContainer();

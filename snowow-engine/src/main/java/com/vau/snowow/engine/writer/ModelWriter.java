@@ -25,7 +25,7 @@ public class ModelWriter extends BaseWriter<List<Model>> {
     private ClassWriter classWriter;
 
     @Override
-    public int write(List<Model> models, String targetPath) throws IOException {
+    public int write(List<Model> models, String targetPath) throws ClassNotFoundException, IOException {
         if (models.isEmpty()) {
             return 1;
         }
@@ -37,33 +37,41 @@ public class ModelWriter extends BaseWriter<List<Model>> {
         if (!modelDir.exists()) {
             modelDir.mkdirs();
         }
+        ArrayList<String> classNames = new ArrayList<>();
 
         lock.lock();
         try {
             for (Model model : models) {
                 String className = model.getName();
+                classNames.add(className);
                 File modelFile = new File(modelDir.getPath() + "/" + className + ".java");
                 ClassWriter.Annotation[] annotations = ClassWriter.Annotation.dataModelCollections();
                 classWriter = new ClassWriter(modelFile, className, Arrays.asList(annotations), true);
                 writeClass(classWriter, model.getFields(), packageName);
-
-                //Add to container
-                SnowContext.addModel(packageName + "." + className);
             }
         } catch (Exception e) {
             log.error(e.toString());
             result = -1;
         } finally {
+            close();
+            addToContainer(packageName, classNames);
             lock.unlock();
         }
 
         return result;
     }
 
+    private void addToContainer(String packageName, List<String> classNames) throws ClassNotFoundException {
+        for (final String name : classNames) {
+            //Add to container
+            SnowContext.addModel(packageName + ".models." + name);
+        }
+    }
+
     private void writeClass(ClassWriter writer, Field[] fields, String packageName) throws IOException {
         List<String> dependencies = List.of("lombok.*");
         writer.wrap(packageName + ".models", classComponents -> {
-            for (final Field field: fields) {
+            for (final Field field : fields) {
                 String name = Objects.requireNonNull(field.getName());
                 String type = Objects.requireNonNull(field.getType());
                 List<ClassWriter.Annotation> annotations = new ArrayList<>();

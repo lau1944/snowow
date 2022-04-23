@@ -14,5 +14,5 @@ public interface Writer<T> {
      * @param targetPath target output file
      * @return
      */
-    int write(T obj, String targetPath) throws IOException;
+    int write(T obj, String targetPath) throws IOException, ClassNotFoundException;
 }
