@@ -66,7 +66,7 @@ public class SnowManager implements SnowEngine {
         }
     }
 
-    private List<Controller> httpParse(String resPath) throws IOException {
+    private List<Controller> httpParse(String resPath) throws IOException, ClassNotFoundException {
         log.info("Parsing Controller files...");
         String apiDir = resPath + "/api";
         // Load API file

@@ -76,7 +76,11 @@ public class ClassWriter {
         }
 
         fileWriter.write("}");
-        fileWriter.close();
+        //fileWriter.close();
+    }
+
+    public void close() throws IOException {
+        Objects.requireNonNull(fileWriter).close();
     }
 
     private void writeDependency(String packageName, List<String> dependencies) throws IOException {

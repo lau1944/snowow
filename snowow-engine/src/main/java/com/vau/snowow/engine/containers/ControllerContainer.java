@@ -10,14 +10,14 @@ import java.util.Objects;
 /**
  * @author liuquan
  */
-public class ControllerContainer implements Container {
+public class ControllerContainer implements Container<Controller> {
 
     private static volatile Container container;
-    private Map<String, Class<? extends Objects>> buffer = new HashMap<>();
+    private Map<String, Controller> buffer = new HashMap<>();
 
     @Override
-    public <T> void push(String key, Class<T> aClass) {
-            buffer.put(Objects.requireNonNull(key), (Class<? extends Objects>) Objects.requireNonNull(aClass));
+    public void push(String key, Controller controller) {
+            buffer.put(Objects.requireNonNull(key), Objects.requireNonNull(controller));
     }
 
     @Override
@@ -35,11 +35,11 @@ public class ControllerContainer implements Container {
     }
 
     @Override
-    public <T> Class<T> get(String name) {
+    public Controller get(String name) {
         if (!contains(name)) {
             throw new IllegalStateException("Container does not contain with key " + name);
         }
-        return (Class<T>) buffer.get(name);
+        return buffer.get(name);
     }
 
     @Override

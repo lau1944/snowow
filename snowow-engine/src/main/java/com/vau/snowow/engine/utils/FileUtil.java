@@ -4,6 +4,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -51,8 +52,9 @@ public class FileUtil {
     }
 
     public static final Class<?> readClassFromFile(String path, String className) throws MalformedURLException, ClassNotFoundException {
+        File file = new File(path);
         URLClassLoader loader = new URLClassLoader(new URL[]{
-                new URL("file://" + path)
+                file.toURI().toURL()
         });
         return loader.loadClass(className);
     }

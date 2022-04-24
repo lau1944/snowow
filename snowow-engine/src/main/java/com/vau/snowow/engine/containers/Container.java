@@ -4,13 +4,13 @@ package com.vau.snowow.engine.containers;
  * State of generated object
  * @author liuquan
  */
-public interface Container {
+public interface Container<T> {
     /**
      * Push object into container
      * @param key class name
      * @param tClass class object
      */
-    <T> void push(String key, Class<T> tClass);
+    void push(String key, T model);
 
     /**
      * Remove certain object with key
@@ -26,7 +26,7 @@ public interface Container {
     /**
      * Get target class object
      */
-    <T> Class<T> get(String name);
+    T get(String name);
 
     /**
      * Check if container is empty

@@ -4,11 +4,11 @@ import com.vau.snowow.engine.core.SnowContext;
 import com.vau.snowow.engine.models.Constant;
 import com.vau.snowow.engine.models.Field;
 import com.vau.snowow.engine.models.Model;
-import com.vau.snowow.engine.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,40 +37,32 @@ public class ModelWriter extends BaseWriter<List<Model>> {
         if (!modelDir.exists()) {
             modelDir.mkdirs();
         }
-        ArrayList<String> classNames = new ArrayList<>();
 
         lock.lock();
         try {
             for (Model model : models) {
                 String className = model.getName();
-                classNames.add(className);
                 File modelFile = new File(modelDir.getPath() + "/" + className + ".java");
                 ClassWriter.Annotation[] annotations = ClassWriter.Annotation.dataModelCollections();
                 classWriter = new ClassWriter(modelFile, className, Arrays.asList(annotations), true);
-                writeClass(classWriter, model.getFields(), packageName);
+                writeClass(model.getFields(), packageName);
+                classWriter.close();
+                // Add  model to container
+                SnowContext.addModel(className, model);
             }
         } catch (Exception e) {
             log.error(e.toString());
             result = -1;
         } finally {
-            close();
-            addToContainer(packageName, classNames);
             lock.unlock();
         }
 
         return result;
     }
 
-    private void addToContainer(String packageName, List<String> classNames) throws ClassNotFoundException {
-        for (final String name : classNames) {
-            //Add to container
-            SnowContext.addModel(packageName + ".models." + name);
-        }
-    }
-
-    private void writeClass(ClassWriter writer, Field[] fields, String packageName) throws IOException {
+    private void writeClass(Field[] fields, String packageName) throws IOException {
         List<String> dependencies = List.of("lombok.*");
-        writer.wrap(packageName + ".models", classComponents -> {
+        classWriter.wrap(packageName + ".models", classComponents -> {
             for (final Field field : fields) {
                 String name = Objects.requireNonNull(field.getName());
                 String type = Objects.requireNonNull(field.getType());

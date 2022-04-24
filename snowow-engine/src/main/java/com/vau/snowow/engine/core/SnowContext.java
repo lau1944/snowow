@@ -9,6 +9,7 @@ import com.vau.snowow.engine.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.Objects;
 
 /**
@@ -24,9 +25,6 @@ public final class SnowContext {
     private static Container controllerContainer = ControllerContainer.newContainer();
 
     public static void onStarted() {
-        modelContainer = new ModelContainer();
-        controllerContainer = new ControllerContainer();
-
         createBuildFile(OUTPUT_PATH);
     }
 
@@ -43,14 +41,12 @@ public final class SnowContext {
         return OUTPUT_PATH;
     }
 
-    public static void addModel(String name) throws ClassNotFoundException {
-        Class modelClass = Class.forName(name);
-        modelContainer.push(name, modelClass);
+    public static void addModel(String packageName, Model model) {
+        modelContainer.push(packageName, model);
     }
 
-    public static void addController(String name) throws ClassNotFoundException {
-        Class controllerClass = Class.forName(name);
-        controllerContainer.push(name, controllerClass);
+    public static void addController(String name, Controller controller) {
+        controllerContainer.push(name, controller);
     }
 
     /**
@@ -74,21 +70,21 @@ public final class SnowContext {
     }
 
     /**
-     * Get controller class object
+     * Get controller object
      *
      * @return
      */
-    public static Class<Controller> getControllerClass(String name) {
-        return controllerContainer.get(name);
+    public static Controller getControllerClass(String name) {
+        return (Controller) controllerContainer.get(name);
     }
 
     /**
-     * Get Model class object
+     * Get Model object
      *
      * @return
      */
-    public static Class<Model> getModelClass(String name) {
-        return modelContainer.get(name);
+    public static Model getModelClass(String name) {
+        return (Model) modelContainer.get(name);
     }
 
     private static void createBuildFile(String path) {

@@ -1,6 +1,6 @@
 package com.vau.snowow.engine.containers;
 
-import com.vau.snowow.engine.core.SnowManager;
+import com.vau.snowow.engine.models.Model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,14 +9,14 @@ import java.util.Objects;
 /**
  * @author liuquan
  */
-public class ModelContainer implements Container {
+public class ModelContainer implements Container<Model> {
 
     private static volatile Container container;
-    private Map<String, Class<? extends Objects>> models = new HashMap<>();
+    private Map<String, Model> models = new HashMap<>();
 
     @Override
-    public <T> void push(String key, Class<T> tClass) {
-        models.put(Objects.requireNonNull(key), (Class<Objects>) Objects.requireNonNull(tClass));
+    public void push(String key, Model model) {
+        models.put(Objects.requireNonNull(key), Objects.requireNonNull(model));
     }
 
     @Override
@@ -34,11 +34,11 @@ public class ModelContainer implements Container {
     }
 
     @Override
-    public <T> Class<T> get(String name) {
+    public Model get(String name) {
         if (!contains(name)) {
             throw new IllegalStateException("Container does not contain with key " + name);
         }
-        return (Class<T>) models.get(name);
+        return models.get(name);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ModelContainer implements Container {
 
         synchronized (ModelContainer.class) {
             if (Objects.isNull(container)) {
-                container = new ControllerContainer();
+                container = new ModelContainer();
             }
         }
 

@@ -20,8 +20,10 @@ import java.util.*;
 @Slf4j
 public class ControllerWriter extends BaseWriter<List<Controller>> {
 
+    private ClassWriter classWriter;
+
     @Override
-    public int write(List<Controller> controllers, String targetPath) throws IOException {
+    public int write(List<Controller> controllers, String targetPath) throws IOException, ClassNotFoundException {
         if (controllers.isEmpty() || !StringUtils.hasLength(targetPath)) {
             return -1;
         }
@@ -50,7 +52,7 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         new ClassWriter.Annotation("RestController"),
                         new ClassWriter.Annotation("RequestMapping", requestMap)
                 };
-                ClassWriter classWriter = new ClassWriter(controllerFile, className, Arrays.asList(classAnnotation), true);
+                classWriter = new ClassWriter(controllerFile, className, Arrays.asList(classAnnotation), true);
                 List<String> dependencies = new ArrayList<>(List.of(
                         "org.springframework.beans.factory.annotation.Autowired",
                         "org.springframework.web.bind.annotation.*",
@@ -85,22 +87,21 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         classComponents.add(components);
                     }
                 }, dependencies);
+                // close writer
+                classWriter.close();
 
-                // Add to container
-                //SnowContext.addController(packageName + ".controllers." + className);
+                // Add controller to container
+                SnowContext.addController(className, controller);
             }
         } catch (Exception e) {
             log.error(e.toString());
             writeResult = -1;
         } finally {
-            // close writer
-            close();
             lock.unlock();
         }
 
         return writeResult;
     }
-
     /**
      * Convert method GET, POST into GetMapping, PostMapping
      *
