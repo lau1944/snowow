@@ -68,10 +68,7 @@ public class ModelWriter extends BaseWriter<List<Model>> {
                 if (field.getNullable() == 0) {
                     annotations.add(new ClassWriter.Annotation("NonNull"));
                 }
-                if (field.getDefaultValue() != null) {
-                    annotations.add(new ClassWriter.Annotation("Builder.Default"));
-                }
-                ClassWriter.Field fieldWriter = new ClassWriter.Field(type, name, false, annotations, field.getDefaultValue());
+                ClassWriter.Field fieldWriter = new ClassWriter.Field(type, name, false, annotations, null);
                 classComponents.add(fieldWriter);
             }
         }, dependencies);

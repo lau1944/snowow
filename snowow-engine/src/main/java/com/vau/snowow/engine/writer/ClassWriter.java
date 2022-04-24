@@ -143,9 +143,10 @@ public class ClassWriter {
         }
         fileWriter.write(field.getIsPublic() ? "public " : "private ");
         fileWriter.write(field.getFieldType() + " " + field.getFieldName());
-        // Check if default value exists, if exists, add to string (Default value should is bound with annotation @Builder.Default
+        // Check if default value exists, if exists, add to string (Default value should is bound with annotation @Builder.Default)
         if (Objects.nonNull(field.getDefaultValue())) {
-            fileWriter.write(" = " + field.getDefaultValue());
+            fileWriter.write(" = ");
+
         }
         fileWriter.write(";");
     }

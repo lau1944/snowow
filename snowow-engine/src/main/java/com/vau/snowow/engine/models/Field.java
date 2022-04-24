@@ -28,8 +28,4 @@ public class Field {
      */
     @Builder.Default
     private Integer nullable = 1;
-    /**
-     * Default value
-     */
-    private Object defaultValue;
 }

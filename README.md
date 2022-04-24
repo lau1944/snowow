@@ -94,8 +94,7 @@ Sample model files of `User.json`
     {
       "name": "age",
       "type": "int",
-      "nullable": 1,
-      "default": 0
+      "nullable": 1
     }
   ]
 }
