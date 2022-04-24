@@ -22,15 +22,12 @@ import java.util.List;
  *         "status": 200,
  *         "type": "application/json",
  *         "data": {
- *           "type": "User",
- *           "value": {
- *             "name": "Jimmy",
- *             "age": 22,
- *             "school": {
- *               "name": "NYU"
- *             }
- *           }
- *         }
+ *  *             "name": "Jimmy",
+ *  *             "age": 22,
+ *  *             "school": {
+ *  *               "name": "NYU"
+ *  *             }
+ *  *           }
  *       }
  *     }
  *   ]

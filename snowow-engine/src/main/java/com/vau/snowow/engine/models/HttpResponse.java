@@ -1,6 +1,5 @@
 package com.vau.snowow.engine.models;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.*;
 
 /**
