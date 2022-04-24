@@ -10,6 +10,6 @@ public class EngineTest {
 
     @Test
     public void parseTest() throws IOException, ClassNotFoundException {
-        engine.parse("snow_app", "com.vau.app");
+        engine.defaultParse("com.vau.app");
     }
 }

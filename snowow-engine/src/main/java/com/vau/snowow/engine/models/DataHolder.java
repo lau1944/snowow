@@ -1,5 +1,6 @@
 package com.vau.snowow.engine.models;
 
+import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class DataHolder<T> {
+public class DataHolder {
     /**
      * Data object type
      */
@@ -17,5 +18,5 @@ public class DataHolder<T> {
     /**
      * Data value
      */
-    private T data;
+    private JsonElement value;
 }

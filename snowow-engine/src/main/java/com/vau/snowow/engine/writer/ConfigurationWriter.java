@@ -20,7 +20,7 @@ public class ConfigurationWriter extends BaseWriter<Configuration> {
      * return value-  1: success -1: error
      */
     @Override
-    public int write(Configuration configuration, String targetPath) throws IOException {
+    public int write(Configuration configuration, String targetPath, String packageName) throws IOException {
         File defaultPropertyFile = new File(targetPath + File.separator + "application.properties");
         log.info(defaultPropertyFile.getPath());
 

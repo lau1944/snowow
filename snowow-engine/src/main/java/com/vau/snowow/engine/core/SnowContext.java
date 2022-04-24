@@ -9,7 +9,6 @@ import com.vau.snowow.engine.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.Objects;
 
 /**
@@ -18,14 +17,13 @@ import java.util.Objects;
  */
 @Slf4j
 public final class SnowContext {
-
-    private static final String OUTPUT_PATH = FileUtil.getEngineRepo() + "/outputs";
+    private static volatile String outputPath = "com.vau.app";
     private static volatile SnowContext context;
     private static Container modelContainer = ModelContainer.newContainer();
     private static Container controllerContainer = ControllerContainer.newContainer();
 
     public static void onStarted() {
-        createBuildFile(OUTPUT_PATH);
+        //createBuildFile(OUTPUT_PATH);
     }
 
     public static void onFinished() {
@@ -37,8 +35,16 @@ public final class SnowContext {
         controllerContainer.clear();
     }
 
+    public static void setOutputPath(String path) {
+        outputPath = path;
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
     public static String getOutputPath() {
-        return OUTPUT_PATH;
+        return outputPath;
     }
 
     public static void addModel(String packageName, Model model) {
@@ -74,7 +80,7 @@ public final class SnowContext {
      *
      * @return
      */
-    public static Controller getControllerClass(String name) {
+    public static Controller getController(String name) {
         return (Controller) controllerContainer.get(name);
     }
 
@@ -83,7 +89,7 @@ public final class SnowContext {
      *
      * @return
      */
-    public static Model getModelClass(String name) {
+    public static Model getModel(String name) {
         return (Model) modelContainer.get(name);
     }
 

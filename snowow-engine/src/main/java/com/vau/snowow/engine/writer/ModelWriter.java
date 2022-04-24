@@ -25,13 +25,11 @@ public class ModelWriter extends BaseWriter<List<Model>> {
     private ClassWriter classWriter;
 
     @Override
-    public int write(List<Model> models, String targetPath) throws ClassNotFoundException, IOException {
+    public int write(List<Model> models, String targetPath, String packageName) {
         if (models.isEmpty()) {
             return 1;
         }
         int result = 1;
-        // Format package path into file path
-        String packageName = Constant.ENGINE_PACKAGE_NAME + ".outputs";
 
         File modelDir = new File(targetPath + "/models");
         if (!modelDir.exists()) {

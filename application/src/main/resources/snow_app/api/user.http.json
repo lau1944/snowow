@@ -18,9 +18,16 @@
           "value": {
             "name": "Jimmy",
             "age": 22,
-            "school": {
-              "name": "NYU"
-            }
+            "school": [
+              {
+                "name": "New York University",
+                "age": 4
+              },
+              {
+                "name": "Cornell University",
+                "age": 2
+              }
+            ]
           }
         }
       }

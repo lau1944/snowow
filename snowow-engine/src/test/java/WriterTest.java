@@ -14,7 +14,7 @@ public class WriterTest {
     public void ConfigurationWriterTest() throws IOException {
         ConfigurationWriter writer = new ConfigurationWriter();
         Configuration configuration = new Configuration();
-        int result = writer.write(configuration, FileUtil.getApplicationPath() + "/resources");
+        int result = writer.write(configuration, FileUtil.getApplicationPath() + "/resources", "com.vau.app");
         assert result == 1;
     }
 

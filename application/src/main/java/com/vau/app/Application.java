@@ -13,9 +13,9 @@ import java.io.IOException;
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class Application {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         // Parse JSON files into java file
-        SnowManager.getInstance().parse("snow_app", "com.vau.app");
+        SnowManager.getInstance().defaultParse("com.vau.app");
         SpringApplication.run(Application.class, args);
     }
 

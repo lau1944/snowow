@@ -23,14 +23,12 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
     private ClassWriter classWriter;
 
     @Override
-    public int write(List<Controller> controllers, String targetPath) throws IOException, ClassNotFoundException {
+    public int write(List<Controller> controllers, String targetPath, String packageName) {
         if (controllers.isEmpty() || !StringUtils.hasLength(targetPath)) {
             return -1;
         }
 
         int writeResult = 1;
-        // Format package path into file path
-        String packageName = Constant.ENGINE_PACKAGE_NAME + ".outputs";
 
         File controllersDir = new File(targetPath + "/controllers");
         if (!controllersDir.exists()) {
@@ -56,7 +54,9 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                 List<String> dependencies = new ArrayList<>(List.of(
                         "org.springframework.beans.factory.annotation.Autowired",
                         "org.springframework.web.bind.annotation.*",
-                        "org.springframework.http.MediaType"
+                        "org.springframework.http.MediaType",
+                        "java.util.Map",
+                        "java.util.HashMap"
                 ));
 
                 File modelDir = new File(targetPath + "/models");
@@ -80,7 +80,7 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         ClassWriter.ClassComponents components = new ClassWriter.Method(
                                 path.getName(),
                                 true,
-                                path.getResponse().getData().getType(),
+                                path.getResponse().getData(),
                                 Arrays.asList(methodAnnotation),
                                 ""
                         );

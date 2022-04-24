@@ -1,6 +1,11 @@
 package com.vau.snowow.engine.writer;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.vau.snowow.engine.core.SnowContext;
+import com.vau.snowow.engine.models.DataHolder;
+import com.vau.snowow.engine.models.Model;
+import com.vau.snowow.engine.utils.StringUtil;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -101,21 +106,33 @@ public class ClassWriter {
             }
         }
         fileWriter.write(method.getIsPublic() ? "public " : "private ");
-        fileWriter.write(method.getReturnType() + " ");
+        String type = "void";
+        if (Objects.nonNull(method.getResponse())) {
+            type = method.getResponse().getType();
+        }
+        if (!StringUtil.isPrimitiveType(method.getResponse().getType())) {
+            type = "Map<String, Object>";
+        }
+        fileWriter.write(type  + " ");
         fileWriter.write(method.getMethodName());
         fileWriter.write("() ");
         fileWriter.write("{ \n");
-        //fileWriter.write("return \"hello world\";");
         fileWriter.write(method.getContent());
+        writeResponse(method.getResponse());
         fileWriter.write("\n" + "}");
     }
 
-    private void writeResponse(String type) {
-        if (!SnowContext.containsModel(type)) {
-            throw new IllegalStateException("Specific type " + type + " has not been initialized");
+    private void writeResponse(DataHolder holder) throws IOException {
+        String type = holder.getType();
+        if (StringUtil.isPrimitiveType(type)) {
+            fileWriter.write("return " + holder.getValue() + ";");
+        }
+        if (!SnowContext.containsModel(holder.getType())) {
+            throw new IllegalStateException("Specific type " + holder.getType() + " has not been initialized");
         }
 
-
+        ObjectWriter objectWriter = new ObjectWriter(fileWriter);
+        objectWriter.buildMap(holder.getValue());
     }
 
     private void writeField(Field field) throws IOException {
@@ -215,50 +232,14 @@ public class ClassWriter {
         private Boolean isPublic;
         private List<Field> params;
         private List<Annotation> annotations;
-        private String returnType;
+        private DataHolder response;
         private String content;
 
-        public Method(String methodName, Boolean isPublic, String content) {
+        public Method(String methodName, Boolean isPublic, DataHolder response, List<Annotation> annotations, String content) {
             this.methodName = methodName;
-            this.returnType = "void";
+            this.response = response;
             this.isPublic = isPublic;
             this.params = new ArrayList<>();
-            this.annotations = new ArrayList<>();
-            this.content = content;
-        }
-
-        public Method(String methodName, Boolean isPublic, List<Field> params, String content) {
-            this.methodName = methodName;
-            this.returnType = "void";
-            this.isPublic = isPublic;
-            this.params = params;
-            this.annotations = new ArrayList<>();
-            this.content = content;
-        }
-
-        public Method(String methodName, Boolean isPublic, List<Field> params, List<Annotation> annotations, String content) {
-            this.methodName = methodName;
-            this.returnType = "void";
-            this.isPublic = isPublic;
-            this.params = params;
-            this.annotations = annotations;
-            this.content = content;
-        }
-
-        public Method(String methodName, Boolean isPublic, String returnType, List<Annotation> annotations, String content) {
-            this.methodName = methodName;
-            this.returnType = returnType;
-            this.isPublic = isPublic;
-            this.params = new ArrayList<>();
-            this.annotations = annotations;
-            this.content = content;
-        }
-
-        public Method(String methodName, Boolean isPublic, String returnType, List<Field> params, List<Annotation> annotations, String content) {
-            this.methodName = methodName;
-            this.returnType = returnType;
-            this.isPublic = isPublic;
-            this.params = params;
             this.annotations = annotations;
             this.content = content;
         }
