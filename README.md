@@ -38,7 +38,7 @@ Then you can use **Snowow** command to simplify the process
 
 After that, you will see a `snow_app` folder in your resource folder in the application module.
 
-`api` : This folder is for storing API related files. Files posix with `.http.json` is the JSON file for HTTP method.
+`api` : This folder is for storing API related files. Files suffix with `.http.json` is the JSON file for HTTP method.
 
 `model` : Declaring Data model in the service
 
