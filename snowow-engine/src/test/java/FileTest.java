@@ -18,12 +18,13 @@ public class FileTest {
         System.out.println(FileUtil.getEnginePath());
     }
 
-    @Test
+
+   /* @Test
     public void testFileToClass() throws MalformedURLException, ClassNotFoundException {
         Class tClass =
                 FileUtil.readClassFromFile(
                         FileUtil.getEnginePath() + "/src/main/java",
                         "com.vau.snowow.engine.outputs.models.User");
-    }
+    }*/
 
 }
