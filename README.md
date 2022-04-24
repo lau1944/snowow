@@ -32,8 +32,14 @@ Then you can use **Snowow** command to simplify the process
 
 ### Initialize the project
 
-```base
+```bash
     snowow init
+```
+
+### To run the service
+
+```bash
+    snowow build
 ```
 
 After that, you will see a `snow_app` folder in your resource folder in the application module.
