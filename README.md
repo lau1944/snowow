@@ -25,7 +25,7 @@ Clone the project into local directory
 Open your shell on the project directory and run
 
 ```base
-    source snowow.sh
+    source .snowow.sh
 ```
 
 Then you can use **Snowow** command to simplify the process
@@ -203,7 +203,7 @@ It would compile the JAVA code and start the Tomcat server.
 
 After you run the above JSON file, you can make an HTTP call to
 
-localhost:8080/user/info?name=Jimmyleo&school=NYU
+http://localhost:8080/user/info?name=Jimmyleo&school=NYU
 
 to see the result
 
