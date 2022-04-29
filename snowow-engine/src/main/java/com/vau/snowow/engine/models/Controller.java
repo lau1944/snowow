@@ -48,7 +48,7 @@ public class Controller {
     /**
      * API version
      */
-    private String version;
+    private int version;
     /**
      * Request path, global mapping
      */

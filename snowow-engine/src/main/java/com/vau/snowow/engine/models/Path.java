@@ -1,5 +1,6 @@
 package com.vau.snowow.engine.models;
 
+import com.google.gson.JsonElement;
 import lombok.*;
 
 /**
@@ -26,11 +27,11 @@ public class Path {
     /**
      * Method request header
      */
-    private String header;
+    private JsonElement header;
     /**
      * Request parameters
      */
-    private String params;
+    private JsonElement params;
     /**
      * API action
      */

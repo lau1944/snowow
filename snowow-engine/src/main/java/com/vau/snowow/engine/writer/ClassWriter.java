@@ -1,10 +1,7 @@
 package com.vau.snowow.engine.writer;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.vau.snowow.engine.core.SnowContext;
 import com.vau.snowow.engine.models.DataHolder;
-import com.vau.snowow.engine.models.Model;
 import com.vau.snowow.engine.utils.StringUtil;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +70,7 @@ public class ClassWriter {
         for (final ClassComponents component : components) {
             if (component instanceof Field) {
                 // Write fields into file
-                writeField((Field) component);
+                fileWriter.write(buildField((Field) component, false));
             } else if (component instanceof Method) {
                 // Write methods into files
                 writeMethod((Method) component);
@@ -115,11 +112,24 @@ public class ClassWriter {
         }
         fileWriter.write(type  + " ");
         fileWriter.write(method.getMethodName());
-        fileWriter.write("() ");
+        fileWriter.write("(");
+        fileWriter.write(buildParams(method.params));
+        fileWriter.write(")");
         fileWriter.write("{ \n");
         fileWriter.write(method.getContent());
         writeResponse(method.getResponse());
         fileWriter.write("\n" + "}");
+    }
+
+    private String buildParams(List<Field> fields) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < fields.size(); ++i) {
+             stringBuilder.append(buildField(fields.get(i), true));
+             if (i < fields.size() - 1) {
+                 stringBuilder.append(", ");
+             }
+         }
+        return stringBuilder.toString();
     }
 
     private void writeResponse(DataHolder holder) throws IOException {
@@ -135,20 +145,31 @@ public class ClassWriter {
         objectWriter.buildMap(holder.getValue());
     }
 
-    private void writeField(Field field) throws IOException {
-        fileWriter.write("\t");
+    private String buildField(Field field, boolean isFromParams) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\t");
         List<Annotation> annotations = field.getAnnotations();
         for (Annotation annotation : annotations) {
-            fileWriter.write(annotation.toString());
+            builder.append(annotation.toString());
         }
-        fileWriter.write(field.getIsPublic() ? "public " : "private ");
-        fileWriter.write(field.getFieldType() + " " + field.getFieldName());
+        if (!isFromParams) {
+            builder.append(field.getIsPublic() ? "public " : "private ");
+        }
+        builder.append(field.getFieldType() + " " + field.getFieldName());
         // Check if default value exists, if exists, add to string (Default value should is bound with annotation @Builder.Default)
+        Object defaultValue = field.getDefaultValue();
         if (Objects.nonNull(field.getDefaultValue())) {
-            fileWriter.write(" = ");
-
+            builder.append(" = ");
+            if (defaultValue instanceof String) {
+                builder.append("\"" + defaultValue + "\"");
+            } else {
+                builder.append(defaultValue.toString());
+            }
         }
-        fileWriter.write(";");
+        if (!isFromParams) {
+            builder.append(";");
+        }
+        return builder.toString();
     }
 
     abstract static class ClassComponents {
@@ -236,13 +257,13 @@ public class ClassWriter {
         private DataHolder response;
         private String content;
 
-        public Method(String methodName, Boolean isPublic, DataHolder response, List<Annotation> annotations, String content) {
+        public Method(String methodName, Boolean isPublic, DataHolder response, List<Annotation> annotations, String content, List<Field> params) {
             this.methodName = methodName;
             this.response = response;
             this.isPublic = isPublic;
-            this.params = new ArrayList<>();
             this.annotations = annotations;
             this.content = content;
+            this.params = params;
         }
     }
 }

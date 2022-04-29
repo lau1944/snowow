@@ -1,15 +1,12 @@
 package com.vau.snowow.engine.writer;
 
 import com.vau.snowow.engine.core.SnowContext;
-import com.vau.snowow.engine.models.Constant;
 import com.vau.snowow.engine.models.Controller;
 import com.vau.snowow.engine.models.Path;
-import com.vau.snowow.engine.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -38,7 +35,8 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
         lock.lock();
         try {
             for (final Controller controller : controllers) {
-                String className = controller.getName() + "Controller";
+                int version = controller.getVersion();
+                String className = controller.getName() + "V" + version + "Controller";
                 File controllerFile = new File(controllersDir.getPath() + "/" + className + ".java");
                 if (controllerFile.createNewFile()) {
                     log.info("{} is created", controllerFile.getAbsolutePath());
@@ -74,15 +72,20 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         ClassWriter.Annotation[] methodAnnotation = new ClassWriter.Annotation[]{
                                 new ClassWriter.Annotation(mapMethodIntoAnnotation(path.getMethod()), methodMap)
                         };
-                        List<ClassWriter.Field> params = new ArrayList<>();
-                        // Add header and params
+
+                        // Add Headers
+                        ClassWriter.Field headers = buildRequestHeaders();
+                        // Add request params
+                        ClassWriter.Field requestParams = buildRequestParams();
+                        List<ClassWriter.Field> methodParams = Arrays.asList(headers, requestParams);
 
                         ClassWriter.ClassComponents components = new ClassWriter.Method(
                                 path.getName(),
                                 true,
                                 path.getResponse().getData(),
                                 Arrays.asList(methodAnnotation),
-                                ""
+                                "",
+                                methodParams
                         );
                         classComponents.add(components);
                     }
@@ -102,6 +105,33 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
 
         return writeResult;
     }
+
+    /**
+     * Build request params
+     */
+    ClassWriter.Field buildRequestParams() {
+        return new ClassWriter.Field(
+                "Map<String, Object>",
+                "params",
+                false,
+                Arrays.asList(new ClassWriter.Annotation("RequestParam")),
+                null
+        );
+    }
+
+    /**
+     * Build request headers field
+     */
+    ClassWriter.Field buildRequestHeaders() {
+        return new ClassWriter.Field(
+                "Map<String, Object>",
+                "headers",
+                false,
+                Arrays.asList(new ClassWriter.Annotation("RequestHeader")),
+                null
+        );
+    }
+
     /**
      * Convert method GET, POST into GetMapping, PostMapping
      *

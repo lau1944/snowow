@@ -1,6 +1,6 @@
 {
   "name": "User",
-  "version": "1.0",
+  "version": 1.0,
   "path": "/user",
   "paths": [
     {
@@ -8,7 +8,9 @@
       "path": "/info",
       "method": "GET",
       "header": "",
-      "params": "",
+      "params": {
+        "user_token": "just_a_test"
+      },
       "action": "",
       "response": {
         "status": 200,
