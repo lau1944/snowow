@@ -175,7 +175,7 @@ Here is the sample `user.http.json`
             "age": 22,
             "school": [
               {
-                "name": "@{headers.school}",
+                "name": "@{params.school}",
                 "age": 4
               },
               {
@@ -203,7 +203,7 @@ It would compile the JAVA code and start the Tomcat server.
 
 After you run the above JSON file, you can make an HTTP call to
 
-http://localhost:8080/user/info?name=Jimmyleo 
+localhost:8080/user/info?name=Jimmyleo&school=NYU
 
 to see the result
 
