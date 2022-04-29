@@ -120,10 +120,6 @@ Declare API in JSON files
 
 `API method type`: (String) API method, ex, GET, POST, PUT...
 
-`header`: (JSON) request header
-
-`params`: (JSON) request params
-
 `action`: (String) service action
 
 *`response` object*:
@@ -156,14 +152,6 @@ Here is the sample `user.http.json`
       "name": "getUserInfo",
       "path": "/info",
       "method": "GET",
-      "headers": {
-        "public_key": "1234567",
-        "school": "New York University"
-      },
-      "params": {
-        "user_token": "just_a_test",
-        "name": "jimmy"
-      },
       "action": "",
       "response": {
         "status": 200,

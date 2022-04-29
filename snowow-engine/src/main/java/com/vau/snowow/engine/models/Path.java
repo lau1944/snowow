@@ -25,14 +25,6 @@ public class Path {
      */
     private String method;
     /**
-     * Method request header
-     */
-    private JsonElement headers;
-    /**
-     * Request parameters
-     */
-    private JsonElement params;
-    /**
      * API action
      */
     private String action;

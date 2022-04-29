@@ -7,14 +7,6 @@
       "name": "getUserInfo",
       "path": "/info",
       "method": "GET",
-      "headers": {
-        "public_key": "1234567",
-        "school": "New York University"
-      },
-      "params": {
-        "user_token": "just_a_test",
-        "name": "jimmy"
-      },
       "action": "",
       "response": {
         "status": 200,
