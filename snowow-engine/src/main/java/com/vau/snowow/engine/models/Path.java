@@ -27,7 +27,7 @@ public class Path {
     /**
      * Method request header
      */
-    private JsonElement header;
+    private JsonElement headers;
     /**
      * Request parameters
      */

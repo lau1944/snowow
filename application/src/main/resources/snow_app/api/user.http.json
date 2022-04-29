@@ -7,9 +7,13 @@
       "name": "getUserInfo",
       "path": "/info",
       "method": "GET",
-      "header": "",
+      "headers": {
+        "public_key": "1234567",
+        "school": "New York University"
+      },
       "params": {
-        "user_token": "just_a_test"
+        "user_token": "just_a_test",
+        "name": "jimmy"
       },
       "action": "",
       "response": {
@@ -18,11 +22,11 @@
         "data": {
           "type": "User",
           "value": {
-            "name": "Jimmy",
+            "name": "@{params.name}",
             "age": 22,
             "school": [
               {
-                "name": "New York University",
+                "name": "@{headers.school}",
                 "age": 4
               },
               {

@@ -145,7 +145,7 @@ public class ClassWriter {
         objectWriter.buildMap(holder.getValue());
     }
 
-    private String buildField(Field field, boolean isFromParams) throws IOException {
+    private String buildField(Field field, boolean isFromParams) {
         StringBuilder builder = new StringBuilder();
         builder.append("\t");
         List<Annotation> annotations = field.getAnnotations();
