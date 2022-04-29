@@ -25,7 +25,7 @@ Clone the project into local directory
 Open your shell on the project directory and run
 
 ```base
-    source run.sh
+    source snowow.sh
 ```
 
 Then you can use **Snowow** command to simplify the process
@@ -36,11 +36,6 @@ Then you can use **Snowow** command to simplify the process
     snowow init
 ```
 
-### To run the service
-
-```bash
-    snowow build
-```
 
 After that, you will see a `snow_app` folder in your resource folder in the application module.
 
@@ -125,9 +120,9 @@ Declare API in JSON files
 
 `API method type`: (String) API method, ex, GET, POST, PUT...
 
-`header`: (String) request header
+`header`: (JSON) request header
 
-`params`: (String) request params
+`params`: (JSON) request params
 
 `action`: (String) service action
 
@@ -143,20 +138,32 @@ Declare API in JSON files
 
 `value`: (Json) your response data if you want to specify response data, default `null`
 
+
+In the method, if you want to use the field inside headers or params, you can use
+
+`@{headers.xxx}` `@{params.xxx}`
+
+
 Here is the sample `user.http.json` 
 
 ```json
 {
   "name": "User",
-  "version": "1.0",
+  "version": 1.0,
   "path": "/user",
   "paths": [
     {
       "name": "getUserInfo",
       "path": "/info",
       "method": "GET",
-      "header": "",
-      "params": "",
+      "headers": {
+        "public_key": "1234567",
+        "school": "New York University"
+      },
+      "params": {
+        "user_token": "just_a_test",
+        "name": "jimmy"
+      },
       "action": "",
       "response": {
         "status": 200,
@@ -164,11 +171,11 @@ Here is the sample `user.http.json`
         "data": {
           "type": "User",
           "value": {
-            "name": "Jimmy",
+            "name": "@{params.name}",
             "age": 22,
             "school": [
               {
-                "name": "New York University",
+                "name": "@{headers.school}",
                 "age": 4
               },
               {
@@ -184,15 +191,21 @@ Here is the sample `user.http.json`
 }
 ```
 
-## Run
+### RUN
 
-After adding the JSON files, type
-
-```base
-    snowow run
+```bash
+    snowow build
 ```
 
-The spring boot application will be compiled and run.
+It would compile the JAVA code and start the Tomcat server.
+
+
+
+After you run the above JSON file, you can make an HTTP call to
+
+http://localhost:8080/user/info?name=Jimmyleo 
+
+to see the result
 
 
 ## Future
