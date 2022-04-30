@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
  * Use as a JSON parser
  * @author liuquan
  */
-public interface Parser<T> {
+public interface IParser<T> {
     /**
      * Parse the current JSON file into java object
      *

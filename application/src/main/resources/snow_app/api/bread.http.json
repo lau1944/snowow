@@ -1,0 +1,28 @@
+{
+  "name": "Bread",
+  "version": 1.0,
+  "path": "/bread",
+  "paths": [
+    {
+      "name": "getBread",
+      "path": "/info",
+      "method": "GET",
+      "action": {
+        "type": "redirect",
+        "url": "https://api.thecatapi.com/v1/images/search",
+        "method": "GET",
+        "headers": {
+          "x-api-key": "@{headers.public_key}"
+        },
+        "params": {
+          "breed_id": "beng"
+        }
+      },
+      "response": {
+        "status": 200,
+        "type": "application/json",
+        "data": {}
+      }
+    }
+  ]
+}

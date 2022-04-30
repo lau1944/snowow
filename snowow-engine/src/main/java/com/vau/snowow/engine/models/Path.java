@@ -3,6 +3,8 @@ package com.vau.snowow.engine.models;
 import com.google.gson.JsonElement;
 import lombok.*;
 
+import java.util.Map;
+
 /**
  * @author liuquan
  */
@@ -27,7 +29,7 @@ public class Path {
     /**
      * API action
      */
-    private JsonElement action;
+    private Map<String, Object> action;
     /**
      * Response format
      */

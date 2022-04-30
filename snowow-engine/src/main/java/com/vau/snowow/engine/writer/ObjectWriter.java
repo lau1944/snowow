@@ -6,9 +6,9 @@ import com.google.gson.JsonObject;
 import com.vau.snowow.engine.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -18,15 +18,38 @@ import java.util.Set;
  */
 @Slf4j
 public final class ObjectWriter {
-    private FileWriter writer;
-
-    public ObjectWriter(FileWriter writer) {
-        this.writer = writer;
+    public ObjectWriter() {
     }
 
-    public void buildMap(JsonElement element) throws IOException {
-        String content = constructHashMap(element, null,true);
-        writer.write(content);
+    public String buildMap(JsonElement element) throws IOException {
+        return constructHashMap(element, true);
+    }
+
+    public String constructHashMap(Map<String, Object> value) {
+        if (Objects.isNull(value)) {
+            return "new HashMap<>()";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(" new HashMap<>() {{ ");
+        Set<Map.Entry<String, Object>> entrySet = value.entrySet();
+        entrySet.forEach(entry -> {
+            builder.append("put(\"" + entry.getKey() + "\", ");
+            Object entryValue = entry.getValue();
+            if (entryValue instanceof String) {
+                String entryStr = (String) entryValue;
+                if (StringUtil.isFormValue(entryStr)) {
+                    builder.append(StringUtil.extractFieldValue(entryValue.toString()));
+                } else {
+                    builder.append("\"" + entryStr + "\"");
+                }
+            } else {
+                builder.append(entryValue);
+            }
+            builder.append(");");
+        });
+        builder.append(" }}");
+        return builder.toString();
     }
 
     /**
@@ -45,7 +68,7 @@ public final class ObjectWriter {
      * @param isForReturn
      * @throws IOException
      */
-    private String constructHashMap(JsonElement jsonElement, String entryKey, Boolean isForReturn) throws IOException {
+    public String constructHashMap(JsonElement jsonElement, Boolean isForReturn) throws IOException {
         StringBuilder builder = new StringBuilder();
         if (isForReturn) {
             builder.append("return ");
@@ -60,10 +83,10 @@ public final class ObjectWriter {
             }
             builder.append("}}");
         } else if (jsonElement.isJsonPrimitive()) {
-            builder.append(extractFieldFromJson(jsonElement, entryKey));
+            builder.append(extractFieldFromJson(jsonElement));
         } else if (jsonElement.isJsonArray()) {
             JsonArray array = jsonElement.getAsJsonArray();
-            builder.append(getArrayProperties(array, entryKey));
+            builder.append(getArrayProperties(array));
         } else if (jsonElement.isJsonNull()) {
             builder.append("null");
         }
@@ -74,7 +97,7 @@ public final class ObjectWriter {
         return builder.toString();
     }
 
-    public static Object extractFieldFromJson(JsonElement jsonElement, String entryKey) {
+    public static Object extractFieldFromJson(JsonElement jsonElement) {
         if (!jsonElement.isJsonPrimitive()) {
             throw new IllegalStateException("Must be a primitive type to extract field");
         }
@@ -87,14 +110,14 @@ public final class ObjectWriter {
         return StringUtil.extractFieldValue(fieldName.replace("\"", ""));
     }
 
-    private String getArrayProperties(JsonArray array, String entryKey) throws IOException {
+    private String getArrayProperties(JsonArray array) throws IOException {
         StringBuilder builder = new StringBuilder();
         if (array.isEmpty()) {
             return "new Object[]{}";
         }
         builder.append("new Object[]{");
         for (JsonElement e : array) {
-            builder.append(constructHashMap(e, entryKey, false)).append(",");
+            builder.append(constructHashMap(e, false)).append(",");
         }
         builder.append("}");
         return builder.toString();
@@ -104,7 +127,7 @@ public final class ObjectWriter {
         StringBuilder builder = new StringBuilder();
         JsonElement value = jsonObject.get(entrySet.getKey());
         builder.append("put(\"").append(entrySet.getKey()).append("\"").append(",");
-        builder.append(constructHashMap(value, entrySet.getKey(), false));
+        builder.append(constructHashMap(value, false));
         builder.append(");");
         return builder.toString();
     }

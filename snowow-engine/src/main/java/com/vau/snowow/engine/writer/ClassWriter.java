@@ -105,10 +105,7 @@ public class ClassWriter {
         fileWriter.write(method.getIsPublic() ? "public " : "private ");
         String type = "void";
         if (Objects.nonNull(method.getResponse())) {
-            type = method.getResponse().getType();
-        }
-        if (!StringUtil.isPrimitiveType(method.getResponse().getType())) {
-            type = "Map<String, Object>";
+            type = "Object";
         }
         fileWriter.write(type  + " ");
         fileWriter.write(method.getMethodName());
@@ -116,9 +113,17 @@ public class ClassWriter {
         fileWriter.write(buildParams(method.params));
         fileWriter.write(")");
         fileWriter.write("{ \n");
+        // write content of method
         fileWriter.write(method.getContent());
-        writeResponse(method.getResponse());
+        // If content has the return keyword, ignore the response
+        if (!hasReturn(method.content)) {
+            writeResponse(method.getResponse());
+        }
         fileWriter.write("\n" + "}");
+    }
+
+    private boolean hasReturn(String content) {
+        return content.startsWith("return");
     }
 
     private String buildParams(List<Field> fields) {
@@ -141,8 +146,8 @@ public class ClassWriter {
             throw new IllegalStateException("Specific type " + holder.getType() + " has not been initialized");
         }
 
-        ObjectWriter objectWriter = new ObjectWriter(fileWriter);
-        objectWriter.buildMap(holder.getValue());
+        ObjectWriter objectWriter = new ObjectWriter();
+        fileWriter.write(objectWriter.buildMap(holder.getValue()));
     }
 
     private String buildField(Field field, boolean isFromParams) {

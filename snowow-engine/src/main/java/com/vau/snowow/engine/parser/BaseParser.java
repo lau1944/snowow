@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 /**
  * @author liuquan
  */
-public abstract class BaseParser<T> implements Parser<T> {
+public abstract class BaseParser<T> implements IParser<T> {
 
     final Gson gson;
 

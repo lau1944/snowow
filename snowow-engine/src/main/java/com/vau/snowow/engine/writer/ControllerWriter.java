@@ -3,6 +3,7 @@ package com.vau.snowow.engine.writer;
 import com.vau.snowow.engine.core.SnowContext;
 import com.vau.snowow.engine.models.Controller;
 import com.vau.snowow.engine.models.Path;
+import com.vau.snowow.engine.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +18,8 @@ import java.util.*;
 @Slf4j
 public class ControllerWriter extends BaseWriter<List<Controller>> {
 
+    private final String ACTION_KEY = "type";
+    private final String REDIRECT_ACTION = "redirect";
     private ClassWriter classWriter;
 
     @Override
@@ -54,7 +57,8 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                         "org.springframework.web.bind.annotation.*",
                         "org.springframework.http.MediaType",
                         "java.util.Map",
-                        "java.util.HashMap"
+                        "java.util.HashMap",
+                        "com.vau.app.service.*"
                 ));
 
                 File modelDir = new File(targetPath + "/models");
@@ -84,15 +88,21 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
                                 true,
                                 path.getResponse().getData(),
                                 Arrays.asList(methodAnnotation),
-                                "",
+                                parseAction(path.getAction()),
                                 methodParams
                         );
+
+                        // Bound web service client object
+                        ClassWriter.Annotation[] fieldAnnotations = new ClassWriter.Annotation[]{new ClassWriter.Annotation("Autowired")};
+                        ClassWriter.Field field = new ClassWriter.Field("IRemoteService", "service",
+                                false, Arrays.asList(fieldAnnotations), null);
+
+                        classComponents.add(field);
                         classComponents.add(components);
                     }
                 }, dependencies);
                 // close writer
                 classWriter.close();
-
                 // Add controller to container
                 SnowContext.addController(className, controller);
             }
@@ -104,6 +114,28 @@ public class ControllerWriter extends BaseWriter<List<Controller>> {
         }
 
         return writeResult;
+    }
+
+    /**
+     * Parse action
+     */
+    private String parseAction(Map<String, Object> action) {
+        if (!action.containsKey(ACTION_KEY)) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        String type = (String) action.get(ACTION_KEY);
+        if (type.equals(REDIRECT_ACTION)) {
+            builder.append("return " + "service.GET(");
+            builder.append("\"" + StringUtil.extractFieldValue(action.get("url").toString()) + "\",");
+            ObjectWriter objectWriter = new ObjectWriter();
+            builder.append(objectWriter.constructHashMap((Map<String, Object>) action.get("params")));
+            builder.append(",");
+            builder.append(objectWriter.constructHashMap((Map<String, Object>) action.get("headers")));
+            builder.append(");");
+        }
+        return builder.toString();
     }
 
     /**

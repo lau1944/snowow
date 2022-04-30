@@ -18,6 +18,9 @@ public final class ValueParser {
     private static final String PARAMS = "params";
     private static final String CONFIGS = "configs";
 
+    private ValueParser() {
+    }
+
     public Object parse(String data) {
         if (!StringUtil.isFormValue(data)) {
             return data;

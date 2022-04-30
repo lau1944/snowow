@@ -7,7 +7,7 @@ import java.io.IOException;
  *
  * @author liuquan
  */
-public interface Writer<T> {
+public interface IWriter<T> {
     /**
      * Write string into target file
      * @param obj object elements for the file properties

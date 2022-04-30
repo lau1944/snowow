@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author liuquan
  */
-public abstract class BaseWriter<T> implements Writer<T> {
+public abstract class BaseWriter<T> implements IWriter<T> {
     public Lock lock;
     private FileWriter writer;
     private File file;
