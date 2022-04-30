@@ -52,7 +52,8 @@ public class SnowManager implements SnowEngine {
         String resPath = getResourcePath(jsonPath);
 
         // Parse configuration file
-        configParse(resPath, packageName);
+        Configuration configuration = configParse(resPath, packageName);
+        SnowContext.setConfiguration(configuration);
 
         // Parse model files
         modelParse(resPath, packageName);
@@ -93,7 +94,7 @@ public class SnowManager implements SnowEngine {
         return controllers;
     }
 
-    private void configParse(String resPath, String packageName) throws IOException {
+    private Configuration configParse(String resPath, String packageName) throws IOException {
         log.info("Parsing configuration files...");
         // Load the configuration file
         ConfigurationParser configurationParser = new ConfigurationParser();
@@ -108,6 +109,8 @@ public class SnowManager implements SnowEngine {
             throw new IllegalStateException("An error occurs when writing configuration file");
         }
         log.info("Configuration file is successfully written to application.properties file, jsonPath is on {}", resPath);
+
+        return configuration;
     }
 
     private String getResourcePath(String jsonPath) {

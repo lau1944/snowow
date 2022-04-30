@@ -1,5 +1,6 @@
 package com.vau.snowow.engine.models;
 
+import com.google.gson.JsonElement;
 import lombok.*;
 
 import java.util.Map;
@@ -44,6 +45,22 @@ public class Configuration {
      * Addition environment variables
      */
     private Map<String, Object> env;
+
+    /**
+     *
+     * @return
+     */
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private JsonElement elements;
+
+    public void setElements(JsonElement elements) {
+        this.elements = elements;
+    }
+
+    public JsonElement getInElements() {
+        return this.elements;
+    }
 
     @Override
     public String toString() {

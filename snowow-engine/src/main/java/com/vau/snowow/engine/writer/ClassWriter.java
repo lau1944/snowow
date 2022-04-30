@@ -121,7 +121,7 @@ public class ClassWriter {
         fileWriter.write("\n" + "}");
     }
 
-    private String buildParams(List<Field> fields) throws IOException {
+    private String buildParams(List<Field> fields) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < fields.size(); ++i) {
              stringBuilder.append(buildField(fields.get(i), true));

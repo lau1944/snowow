@@ -3,10 +3,12 @@ package com.vau.snowow.engine.core;
 import com.vau.snowow.engine.containers.Container;
 import com.vau.snowow.engine.containers.ControllerContainer;
 import com.vau.snowow.engine.containers.ModelContainer;
+import com.vau.snowow.engine.models.Configuration;
 import com.vau.snowow.engine.models.Controller;
 import com.vau.snowow.engine.models.Model;
 import com.vau.snowow.engine.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 
 import java.io.File;
 import java.util.Objects;
@@ -19,6 +21,7 @@ import java.util.Objects;
 public final class SnowContext {
     private static volatile String outputPath = "com.vau.app";
     private static volatile SnowContext context;
+    private static volatile Configuration configuration;
     private static Container modelContainer = ModelContainer.newContainer();
     private static Container controllerContainer = ControllerContainer.newContainer();
 
@@ -33,6 +36,18 @@ public final class SnowContext {
 
         modelContainer.clear();
         controllerContainer.clear();
+    }
+
+    public static void setConfiguration(Configuration config) {
+        configuration = config;
+    }
+
+    public static Configuration loadConfiguration() {
+        if (Objects.isNull(configuration)) {
+            throw new NullPointerException("Configuration object is null, please wait for config completion");
+        }
+
+        return configuration;
     }
 
     public static void setOutputPath(String path) {

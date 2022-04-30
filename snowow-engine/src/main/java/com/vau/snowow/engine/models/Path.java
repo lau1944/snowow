@@ -27,7 +27,7 @@ public class Path {
     /**
      * API action
      */
-    private String action;
+    private JsonElement action;
     /**
      * Response format
      */

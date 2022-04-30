@@ -2,6 +2,7 @@ package com.vau.snowow.engine.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.vau.snowow.engine.parser.ValueParser;
 
 import java.util.regex.Pattern;
 
@@ -32,15 +33,12 @@ public final class StringUtil {
      * @param fieldName
      * @return
      */
-    public static String extractFieldValue(String fieldName) {
+    public static Object extractFieldValue(String fieldName) {
         if (!StringUtil.isFormValue(fieldName)) {
             return fieldName;
         }
 
-        StringBuilder builder = new StringBuilder();
-        String value = fieldName.substring(2, fieldName.length() - 1);
-        String[] args = value.split("\\.");
-        builder.append(args[0] + ".get(\"" + args[1] + "\") ");
-        return builder.toString();
+        ValueParser valueParser = ValueParser.newParser();
+        return valueParser.parse(fieldName);
     }
 }

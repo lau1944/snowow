@@ -7,14 +7,20 @@
       "name": "getUserInfo",
       "path": "/info",
       "method": "GET",
-      "action": "",
+      "action": {
+        "name": "redirect",
+        "url": "https://http.cat",
+        "params": {
+          "status": "@{params.status}"
+        }
+      },
       "response": {
         "status": 200,
         "type": "application/json",
         "data": {
           "type": "User",
           "value": {
-            "name": "@{params.name}",
+            "name": "@{configs.env.status}",
             "age": 22,
             "school": [
               {

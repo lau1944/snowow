@@ -4,6 +4,7 @@
   "profiles": "dev",
   "port": 8080,
   "env": {
-    "api_key": "123456"
+    "api_key": "123456",
+    "status": "101"
   }
 }
