@@ -12,7 +12,7 @@
         "url": "https://api.thecatapi.com/v1/images/search",
         "method": "GET",
         "headers": {
-          "x-api-key": "@{headers.public_key}"
+          "x-api-key": "@{configs.env.api_key}"
         },
         "params": {
           "breed_id": "beng"
