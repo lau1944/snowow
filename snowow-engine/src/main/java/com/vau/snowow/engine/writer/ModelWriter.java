@@ -65,7 +65,7 @@ public class ModelWriter extends BaseWriter<List<Model>> {
                 String name = Objects.requireNonNull(field.getName());
                 String type = Objects.requireNonNull(field.getType());
                 List<ClassWriter.Annotation> annotations = new ArrayList<>();
-                if (field.getNullable() == 0) {
+                if (!field.getNullable()) {
                     annotations.add(new ClassWriter.Annotation("NonNull"));
                 }
                 ClassWriter.Field fieldWriter = new ClassWriter.Field(type, name, false, annotations, null);

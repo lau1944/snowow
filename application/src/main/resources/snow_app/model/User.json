@@ -4,17 +4,17 @@
     {
       "name": "name",
       "type": "String",
-      "nullable": 0
+      "nullable": false
     },
     {
       "name": "age",
       "type": "int",
-      "nullable": 1
+      "nullable": true
     },
     {
       "name": "school",
       "type": "School",
-      "nullable": 1
+      "nullable": true
     }
   ]
 }

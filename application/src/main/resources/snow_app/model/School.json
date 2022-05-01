@@ -8,7 +8,7 @@
     {
       "name": "location",
       "type": "String",
-      "nullable": 1
+      "nullable": true
     }
   ]
 }

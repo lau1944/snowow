@@ -100,12 +100,12 @@ Sample model files of `User.json`
     {
       "name": "name",
       "type": "String",
-      "nullable": 0
+      "nullable": false
     },
     {
       "name": "age",
       "type": "int",
-      "nullable": 1
+      "nullable": true
     }
   ]
 }
@@ -191,8 +191,7 @@ Each `.http.json` file would generate **one controller class**.
 Inside the file, every `path` object inside the `paths` array, we would generate `one HTTP method`, similar to writing
 the controller method with `@GetMapping` on it.
 
-Inside the method, we can define `headers` and `params`, which corresponding to our http **RequestHeaders** and **
-RequestParams**
+Inside the method, we can define `headers` and `params`, which corresponding to our http **RequestHeaders** and **RequestParams**
 
 If you want to receive these value inside the scope of this method, here is format to retrieve the data.
 

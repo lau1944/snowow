@@ -24,8 +24,8 @@ public class Field {
     @NonNull
     private String type;
     /**
-     * Nullable indicator (0 or 1)
+     * Nullable indicator
      */
     @Builder.Default
-    private Integer nullable = 1;
+    private Boolean nullable = true;
 }
